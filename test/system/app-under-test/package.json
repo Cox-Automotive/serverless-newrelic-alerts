@@ -1,0 +1,10 @@
+{
+  "name": "test-solution",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "serverless-newrelic-alerts": "./serverless-newrelic-alerts",
+    "serverless": "^1.73.1"
+  }
+}

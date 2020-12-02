@@ -1,0 +1,62 @@
+service: plugin-test
+
+plugins:
+  - serverless-newrelic-alerts
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  under-newrelic-mntrng:
+    handler: index.endpoint
+    alerts:
+      policy_service_token: arn:aws:test-policy_service_token
+      infrastructure_condition_service_token: arn:aws:test-infrastructure_condition_service_token
+      filter_item_service_token: arn:aws:test-filter_item_service_token
+      nrql_condition_service_token: arn:aws:test-nrql_condition_service_token
+      policies:
+        - name: Policy Test
+          incident_preference: PER_POLICY
+      filter_item:
+        - condition_id: 16439541
+          filter:
+            and:
+              in:
+                displayName: ${self:service}-auto-created
+      infrastructure_conditions:
+        - policy_id: 1069005
+          data:
+            type: infra_metric
+            name: Infra Test
+            enabled: true
+            filter:
+              and:
+                - in:
+                    displayName:
+                      - ${self:service}-dev-another-one
+            violation_close_timer: 24
+            created_at_epoch_millis: 1601565802841
+            updated_at_epoch_millis: 1602228391394
+            policy_id: 1069005
+            event_type: ServerlessSample
+            select_value: provider.duration.Average
+            comparison: above
+            critical_threshold:
+              value: 10000
+              duration_minutes: 5
+              time_function: all
+            integration_provider: LambdaFunction
+      nrql_conditions:
+        - name: NRQL Test
+          enabled: false
+          policy_id: 1069005
+          terms:
+            - duration: '1'
+              operator: 'equal'
+              priority: 'critical'
+              threshold: '1.0'
+              time_function: 'all'
+          nrql:
+            query: 'SELECT count(*) FROM AwsLambdaInvocationError FACET currentTime'
+            since_value: '1'

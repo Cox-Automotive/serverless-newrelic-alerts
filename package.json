@@ -1,0 +1,91 @@
+{
+  "name": "serverless-newrelic-alerts",
+  "version": "0.0.1",
+  "description": "A serverless plugin to add New Relic alerts to a AWS resources",
+  "keywords": [
+    "New Relic",
+    "serverless",
+    "plugin",
+    "AWS"
+  ],
+  "main": "dist/serverless-newrelic-alerts.umd.js",
+  "module": "dist/serverless-newrelic-alerts.es5.js",
+  "typings": "dist/types/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cox-Automotive/serverless-newrelic-alerts"
+  },
+  "homepage": "https://github.com/Cox-Automotive/serverless-newrelic-alerts#readme",
+  "bugs": {
+    "url": "https://github.com/Cox-Automotive/serverless-newrelic-alerts/issues"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "prebuild": "rimraf dist",
+    "build": "tsc && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "tsc && jest",
+    "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "commit": "git-cz",
+    "semantic-release": "semantic-release",
+    "precommit": "lint-staged",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "validate-commit-msg"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    },
+    "validate-commit-msg": {
+      "types": "conventional-commit-types",
+      "helpMessage": "Use \"npm run commit\" instead, we use conventional-changelog format :) (https://github.com/commitizen/cz-cli)"
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.2",
+    "@types/serverless": "^1.78.1",
+    "colors": "1.3.2",
+    "commitizen": "^2.9.6",
+    "cross-env": "^5.0.1",
+    "cz-conventional-changelog": "^2.0.0",
+    "husky": "^0.14.0",
+    "jest": "^26.4.2",
+    "lint-staged": "7.2.2",
+    "lodash.camelcase": "^4.3.0",
+    "prettier": "1.14.2",
+    "prompt": "^1.0.0",
+    "replace-in-file": "3.4.2",
+    "rimraf": "^2.7.1",
+    "rollup": "^0.59.2",
+    "rollup-plugin-commonjs": "9.1.6",
+    "rollup-plugin-json": "3.1.0",
+    "rollup-plugin-node-resolve": "3.4.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.11.1",
+    "semantic-release": "15.9.15",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^6.0.0",
+    "tslint": "^5.8.0",
+    "tslint-config-prettier": "1.15.0",
+    "tslint-config-standard": "^9.0.0",
+    "typedoc": "^0.19.2",
+    "typescript": "^4.0.3",
+    "validate-commit-msg": "^2.12.2"
+  }
+}
