@@ -10,9 +10,10 @@ jobs:
     steps:
       - checkout
       - run: npm ci
+      - run: npm run build
       - run:
           name: Run tests
-          command: npm test && npm run test:prod
+          command: npm run test:prod
   deploy:
     <<: *defaults
     steps:
