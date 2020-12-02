@@ -1,6 +1,6 @@
 {
   "name": "serverless-newrelic-alerts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A serverless plugin to add New Relic alerts to a AWS resources",
   "keywords": [
     "New Relic",
