@@ -1,13 +1,19 @@
 # New Relic Serverless Plugin
-This serverless plugin allows adding New Relic alerts to a function. 
-The sole responsibility of the plugin is to generate additional 
-CloudFormation code with [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html), 
-that will create New Relic alerts for the function.  
 
-**The plugin development plans include templates that can be used 
-with 1-2 lines of code in serverless.yml** 
+[![NPM](https://nodei.co/npm/serverless-newrelic-alerts.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/serverless-newrelic-alerts/)
 
-### Usage 
+[![Build Status](https://travis-ci.org/Cox-Automotive/serverless-newrelic-alerts.svg?branch=master)](https://travis-ci.org/Cox-Automotive/serverless-newrelic-alerts)
+
+
+This serverless plugin allows adding New Relic alerts to a function.
+The sole responsibility of the plugin is to generate additional
+CloudFormation code with [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html),
+that will create New Relic alerts for the function.
+
+**The plugin development plans include templates that can be used
+with 1-2 lines of code in serverless.yml**
+
+### Usage
 ```yml
 functions:
   under-newrelic-mntrng:
@@ -43,7 +49,7 @@ functions:
               time_function: all
             integration_provider: LambdaFunction
       nrql_conditions:
-        - name: NRQL Alert Condition Test        
+        - name: NRQL Alert Condition Test
           policy_id: <id of the parent policy>
           enabled: false
           terms:
@@ -54,7 +60,7 @@ functions:
             time_function: 'all'
           nrql:
             query: 'SELECT count(*) FROM AwsLambdaInvocationError FACET currentTime'
-            since_value: '1'    
+            since_value: '1'
     events:
       - http:
           path: ping
