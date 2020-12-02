@@ -12,10 +12,14 @@ jobs:
       - run: npm ci
       - run:
           name: Run tests
-          command: npm test
+          command: npm run test:prod
   deploy:
     <<: *defaults
     steps:
+      - checkout
+      - run:
+          name: Compile TypeScript
+          command: npm run build
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
