@@ -14,13 +14,17 @@ jobs:
       - run:
           name: Run tests
           command: npm run test:prod
+      - persist_to_workspace:
+          root: .
+          paths: .
   deploy:
     <<: *defaults
     steps:
-      - checkout
-      - run:
-          name: Compile TypeScript
-          command: npm run build
+      - attach_workspace:
+          at: .
+#      - run:
+#          name: Compile TypeScript
+#          command: npm run build
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
