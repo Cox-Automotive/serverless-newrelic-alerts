@@ -9,8 +9,8 @@ describe('Serverless package', () => {
       console.log('stdout: ', error.stdout?.toString());
       console.log('stderr: ', error.stderr?.toString());
     }
-    const cfTemplate = require('./app-under-test/.serverless/cloudformation-template-update-stack.json');
-    const expectedCfTemplate = require('./app-under-test/extected-cloudformation-template-update-stack.json');
+    const cfTemplate = require('./test/system/app-under-test/.serverless/cloudformation-template-update-stack.json');
+    const expectedCfTemplate = require('./test/system/app-under-test/extected-cloudformation-template-update-stack.json');
     expect(cfTemplate.Resources).toEqual(expect.objectContaining(expectedCfTemplate.Resources));
   })
 })
