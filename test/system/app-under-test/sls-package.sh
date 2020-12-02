@@ -5,4 +5,4 @@ cp -R ../../../dist serverless-newrelic-alerts/
 
 npm install
 
-sls package
+serverless package
