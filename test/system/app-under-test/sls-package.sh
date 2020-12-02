@@ -5,4 +5,4 @@ cp -R ../../../dist serverless-newrelic-alerts/
 
 npm install
 
-serverless package
+node_modules/serverless/bin/serverless package
