@@ -12,7 +12,7 @@ jobs:
       - run: npm ci
       - run:
           name: Run tests
-          command: npm run test:prod
+          command: npm test && npm run test:prod
   deploy:
     <<: *defaults
     steps:
