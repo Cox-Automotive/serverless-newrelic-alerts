@@ -2,7 +2,8 @@
 
 [![NPM](https://nodei.co/npm/serverless-newrelic-alerts.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/serverless-newrelic-alerts/)
 
-[![Build Status](https://travis-ci.org/Cox-Automotive/serverless-newrelic-alerts.svg?branch=master)](https://travis-ci.org/Cox-Automotive/serverless-newrelic-alerts)
+[![CircleCI](https://circleci.com/gh/Cox-Automotive/serverless-newrelic-alerts.svg?style=shield)](https://circleci.com/gh/Cox-Automotive/serverless-newrelic-alerts)
+
 
 
 This serverless plugin allows adding New Relic alerts to a function.
