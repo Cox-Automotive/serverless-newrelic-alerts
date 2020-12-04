@@ -28,13 +28,14 @@
     "prebuild": "rimraf dist",
     "build": "tsc && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.ts -w",
-    "test": "tsc && jest test",
-    "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+    "test:all": "tsc && jest",
+    "test": "npm run test:all -- --rootDir=test",
+    "test:prod": "npm run lint && npm run test:all -- --coverage --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "precommit": "lint-staged",
-    "prepush": "npm run test:prod && npm run build",
+    "prepush": "npm run test",
     "commitmsg": "validate-commit-msg"
   },
   "release": {
