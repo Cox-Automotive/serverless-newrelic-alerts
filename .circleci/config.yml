@@ -30,7 +30,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && npm whoami
       - run:
           name: Publish package
-          command: npm run semantic-release
+          command: npm run semantic-release --debug
 
 workflows:
   version: 2
