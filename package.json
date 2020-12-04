@@ -39,7 +39,6 @@
     "commitmsg": "validate-commit-msg"
   },
   "release": {
-    "debug": true,
     "branches": [
       "main",
       "feature/circleci"

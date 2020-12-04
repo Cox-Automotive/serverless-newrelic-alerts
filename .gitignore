@@ -10,4 +10,3 @@ compiled
 .rpt2_cache
 docs
 dist
-dist/**/test

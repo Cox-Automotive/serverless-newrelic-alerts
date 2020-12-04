@@ -22,15 +22,12 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-#      - run:
-#          name: Compile TypeScript
-#          command: npm run build
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && npm whoami
       - run:
           name: Publish package
-          command: npm run semantic-release --debug
+          command: npm run semantic-release
 
 workflows:
   version: 2
