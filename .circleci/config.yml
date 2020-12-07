@@ -1,0 +1,43 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:14.15.1
+
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: npm ci
+      - run: npm run build
+      - run:
+          name: Run tests
+          command: npm run test:prod
+      - persist_to_workspace:
+          root: .
+          paths: .
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && npm whoami
+      - run:
+          name: Publish package
+          command: npm run semantic-release
+
+workflows:
+  version: 2
+  test-n-deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - main

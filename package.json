@@ -1,6 +1,6 @@
 {
   "name": "serverless-newrelic-alerts",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "A serverless plugin to add New Relic alerts to a AWS resources",
   "keywords": [
     "New Relic",
@@ -28,14 +28,21 @@
     "prebuild": "rimraf dist",
     "build": "tsc && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.ts -w",
-    "test": "tsc && jest",
-    "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+    "test:all": "tsc && jest",
+    "test": "npm run test:all -- --rootDir=test",
+    "test:prod": "npm run lint && npm run test:all -- --coverage --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "precommit": "lint-staged",
-    "prepush": "npm run test:prod && npm run build",
+    "prepush": "npm run test",
     "commitmsg": "validate-commit-msg"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "feature/circleci"
+    ]
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -78,7 +85,12 @@
     "rollup-plugin-node-resolve": "3.4.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.11.1",
-    "semantic-release": "15.9.15",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.2.0",
+    "@semantic-release/npm": "^7.0.9",
+    "semantic-release": "^17.3.0",
     "ts-jest": "^26.4.1",
     "ts-node": "^6.0.0",
     "tslint": "^5.8.0",
