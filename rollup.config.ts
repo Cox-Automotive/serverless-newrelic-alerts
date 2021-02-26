@@ -13,12 +13,12 @@ export default {
   input: 'src/index.ts',
   output: [
     { file: pkg.main, format: 'cjs', sourcemap: true, exports: 'named' },
-    { file: pkg.module, format: 'es', sourcemap: true, exports: 'named' }    
+    { file: pkg.module, format: 'es', sourcemap: true, exports: 'named' }
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
   watch: {
-    include: 'src/**',
+    include: 'src/**'
   },
   plugins: [
     // Allow json resolution
@@ -33,6 +33,6 @@ export default {
     resolve(),
 
     // Resolve source maps to the original source
-    sourceMaps(),
-  ],
+    sourceMaps()
+  ]
 }

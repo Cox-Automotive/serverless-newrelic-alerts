@@ -1,60 +1,47 @@
 {
   "Resources": {
-    "UnderDashnewrelicDashmntrngLambdaFunctionPolicyTestPolicy": {
+    "PluginTestNewRelicPolicy": {
       "Type": "Custom::NewRelicPolicy",
       "Properties": {
         "ServiceToken": "arn:aws:test-policy_service_token",
         "policy": {
-          "name": "Policy Test",
+          "name": "PluginTest TEST",
           "incident_preference": "PER_POLICY"
         }
       }
     },
-    "UnderDashnewrelicDashmntrngLambdaFunctionFilterItem": {
-      "Type": "Custom::NRFilterItem",
-      "Properties": {
-        "ServiceToken": "arn:aws:test-filter_item_service_token",
-        "data": {
-          "condition_id": 16439541,
-          "filter": {
-            "and": {
-              "in": {
-                "displayName": "plugin-test-auto-created"
-              }
-            }
-          }
-        }
-      }
-    },
-    "UnderDashnewrelicDashmntrngLambdaFunctionInfraTestInfrastructureCondition": {
+    "FunctionDuration1SecInfrastructureCondition": {
       "Type": "Custom::NewRelicInfrastructureCondition",
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
-        "policy_id": 1069005,
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
         "data": {
           "type": "infra_metric",
-          "name": "Infra Test",
+          "name": "PluginTest TEST - Function Duration 1 Sec",
           "enabled": true,
           "filter": {
             "and": [
               {
                 "in": {
                   "displayName": [
-                    "plugin-test-dev-another-one"
+                    "plugin-test-test-under-newrelic-mntrng",
+                    "plugin-test-test-dummy-lambda"
                   ]
                 }
               }
             ]
           },
           "violation_close_timer": 24,
-          "created_at_epoch_millis": 1601565802841,
-          "updated_at_epoch_millis": 1602228391394,
-          "policy_id": 1069005,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
           "event_type": "ServerlessSample",
-          "select_value": "provider.duration.Average",
+          "select_value": "provider.duration.Maximum",
           "comparison": "above",
           "critical_threshold": {
-            "value": 10000,
+            "value": 1000,
             "duration_minutes": 5,
             "time_function": "all"
           },
@@ -62,27 +49,81 @@
         }
       }
     },
-    "UnderDashnewrelicDashmntrngLambdaFunctionNRQLTestNrqlCondition": {
-      "Type": "Custom::NewRelicNrqlCondition",
+    "FunctionErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
       "Properties": {
-        "ServiceToken": "arn:aws:test-nrql_condition_service_token",
-        "policy_id": 1069005,
-        "nrql_condition": {
-          "name": "NRQL Test",
-          "enabled": false,
-          "terms": [
-            {
-              "duration": "1",
-              "operator": "equal",
-              "priority": "critical",
-              "threshold": "1.0",
-              "time_function": "all"
-            }
-          ],
-          "nrql": {
-            "query": "SELECT count(*) FROM AwsLambdaInvocationError FACET currentTime",
-            "since_value": "1"
-          }
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Function Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "displayName": [
+                    "plugin-test-test-under-newrelic-mntrng",
+                    "plugin-test-test-dummy-lambda"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "ServerlessSample",
+          "select_value": "provider.errors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "LambdaFunction"
+        }
+      }
+    },
+    "FunctionThrottlesInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Function Throttles",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "displayName": [
+                    "plugin-test-test-under-newrelic-mntrng",
+                    "plugin-test-test-dummy-lambda"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "ServerlessSample",
+          "select_value": "provider.throttles.Maximum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "LambdaFunction"
         }
       }
     }
