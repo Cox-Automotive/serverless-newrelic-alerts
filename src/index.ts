@@ -83,7 +83,7 @@ class NewRelicAlertsPlugin implements Plugin {
     }
 
     const policyStatement = this.getPolicyCloudFormation(policyServiceToken)
-    const infrastructureConditionStatements = alerts.reduce((statements, alert) => {
+    const globalConditionStatements = alerts.reduce((statements, alert) => {
       return {
         ...statements,
         ...this.getInfrastructureConditionCloudFormation(
@@ -94,9 +94,37 @@ class NewRelicAlertsPlugin implements Plugin {
       }
     }, {})
 
+    const functions = this.serverless.service.getAllFunctions()
+    const functionalAlerts = functions.reduce<Record<string, string[]>>((acc, functionName) => {
+      const { alerts = [], name } = this.serverless.service.getFunction(
+        functionName
+      ) as Serverless.FunctionDefinition & { alerts?: Alert[] }
+
+      alerts.forEach(alert => {
+        acc[alert] = [...(acc[alert] || []), name]
+      })
+
+      return acc
+    }, {})
+
+    const functionalConditionStatements = Object.entries(functionalAlerts).reduce(
+      (statements, [alert, functions]) => {
+        return {
+          ...statements,
+          ...this.getInfrastructureConditionCloudFormation(
+            infrastructureConditionServiceToken,
+            alert as Alert,
+            functions
+          )
+        }
+      },
+      {}
+    )
+
     Object.assign(this.serverless.service.provider.compiledCloudFormationTemplate.Resources, {
       ...policyStatement,
-      ...infrastructureConditionStatements
+      ...functionalConditionStatements,
+      ...globalConditionStatements
     })
   }
 }

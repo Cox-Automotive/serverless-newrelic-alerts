@@ -10,7 +10,6 @@ custom:
     alerts:
       - functionDuration1Sec
       - functionErrors
-      - functionThrottles
 
 provider:
   name: aws
@@ -20,6 +19,14 @@ provider:
 functions:
   under-newrelic-mntrng:
     handler: index.endpoint
+    alerts:
+      - functionThrottles
 
   dummy-lambda:
+    handler: index.endpoint
+    alerts:
+      - functionThrottles
+      - functionErrors
+
+  test-lambda:
     handler: index.endpoint
