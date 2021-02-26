@@ -106,8 +106,7 @@
                 "in": {
                   "displayName": [
                     "plugin-test-test-under-newrelic-mntrng",
-                    "plugin-test-test-dummy-lambda",
-                    "plugin-test-test-test-lambda"
+                    "plugin-test-test-dummy-lambda"
                   ]
                 }
               }

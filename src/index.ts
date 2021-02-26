@@ -3,13 +3,14 @@ import AwsProvider from 'serverless/plugins/aws/provider/awsProvider'
 import Serverless from 'serverless'
 import startCase from 'lodash/startCase'
 import upperCase from 'lodash/upperCase'
+import isString from 'lodash/isString'
 
 import {
   getNormalizedInfrastructureConditionName,
   getNormalizedName,
   getNormalizedPolicyName
 } from './utils/name-normalizer'
-import { NewrelicAlertsConfig, Alert } from './types/newrelic-alerts-config'
+import { NewrelicAlertsConfig, Alert, ResourceAlertOverride } from './types/newrelic-alerts-config'
 import getInfrastructureCondition from './conditions/infrastructure'
 
 class NewRelicAlertsPlugin implements Plugin {
@@ -83,28 +84,39 @@ class NewRelicAlertsPlugin implements Plugin {
     }
 
     const policyStatement = this.getPolicyCloudFormation(policyServiceToken)
+
+    const functions = this.serverless.service.getAllFunctions()
+    const functionalAlerts = functions.reduce<Record<string, Record<string, boolean>>>(
+      (acc, functionName) => {
+        const { alerts = [], name } = this.serverless.service.getFunction(
+          functionName
+        ) as Serverless.FunctionDefinition & ResourceAlertOverride
+
+        alerts.forEach(alert => {
+          const alertName = isString(alert) ? alert : alert.name
+          acc[alertName] = acc[alertName] || {}
+          acc[alertName][name] = isString(alert) || alert.enabled
+        })
+
+        return acc
+      },
+      {}
+    )
+
     const globalConditionStatements = alerts.reduce((statements, alert) => {
       return {
         ...statements,
         ...this.getInfrastructureConditionCloudFormation(
           infrastructureConditionServiceToken,
           alert,
-          functionsNames
+          functionsNames.filter(
+            functionName =>
+              !functionalAlerts[alert] ||
+              functionalAlerts[alert][functionName] === undefined ||
+              functionalAlerts[alert][functionName]
+          )
         )
       }
-    }, {})
-
-    const functions = this.serverless.service.getAllFunctions()
-    const functionalAlerts = functions.reduce<Record<string, string[]>>((acc, functionName) => {
-      const { alerts = [], name } = this.serverless.service.getFunction(
-        functionName
-      ) as Serverless.FunctionDefinition & { alerts?: Alert[] }
-
-      alerts.forEach(alert => {
-        acc[alert] = [...(acc[alert] || []), name]
-      })
-
-      return acc
     }, {})
 
     const functionalConditionStatements = Object.entries(functionalAlerts).reduce(
@@ -114,7 +126,9 @@ class NewRelicAlertsPlugin implements Plugin {
           ...this.getInfrastructureConditionCloudFormation(
             infrastructureConditionServiceToken,
             alert as Alert,
-            functions
+            Object.entries(functions)
+              .filter(([functionName, isAlertEnabled]) => isAlertEnabled)
+              .map(([functionName]) => functionName)
           )
         }
       },

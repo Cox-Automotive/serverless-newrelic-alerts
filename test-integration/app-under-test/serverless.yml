@@ -25,8 +25,12 @@ functions:
   dummy-lambda:
     handler: index.endpoint
     alerts:
-      - functionThrottles
+      - name: functionThrottles
+        enabled: true
       - functionErrors
 
   test-lambda:
     handler: index.endpoint
+    alerts:
+      - name: functionDuration1Sec
+        enabled: false
