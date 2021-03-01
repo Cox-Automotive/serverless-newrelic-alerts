@@ -5,19 +5,23 @@ import { Comparison } from '../constants/comparison'
 import { EventType } from '../constants/event-type'
 import { Ref } from './ref'
 
+export type Filter<T> = {
+  and: { in: T }[]
+}
+export type FunctionFilter = Filter<{
+  displayName: string[]
+}>
+export type ApiGatewayFilter = Filter<{
+  apiName: string[]
+}>
+
 export type InfrastructureCondition = {
   policy_id?: Ref
   data: {
     type: ConditionType
     name: string
     enabled: boolean
-    filter: {
-      and: {
-        in: {
-          displayName: string[]
-        }
-      }[]
-    }
+    filter: FunctionFilter | ApiGatewayFilter
     violation_close_timer: number
     created_at_epoch_millis?: number
     updated_at_epoch_millis?: number
@@ -30,6 +34,6 @@ export type InfrastructureCondition = {
       duration_minutes: number
       time_function: TimeFunction
     }
-    integration_provider: IntegrationProvider
+    integration_provider?: IntegrationProvider
   }
 }

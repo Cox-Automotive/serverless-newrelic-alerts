@@ -10,6 +10,8 @@ custom:
     alerts:
       - functionDuration1Sec
       - functionErrors
+      - apiGateway4XXErrors
+      - apiGateway5XXErrors
 
 provider:
   name: aws
@@ -19,6 +21,10 @@ provider:
 functions:
   under-newrelic-mntrng:
     handler: index.endpoint
+    events:
+      - http:
+          path: test
+          method: get
     alerts:
       - functionThrottles
 

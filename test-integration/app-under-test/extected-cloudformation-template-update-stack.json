@@ -127,6 +127,80 @@
           "integration_provider": "LambdaFunction"
         }
       }
+    },
+    "ApiGateway4XxErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Api Gateway 4 XX Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "apiName": [
+                    "test-plugin-test"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "ApiGatewaySample",
+          "select_value": "provider.4xxError.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          }
+        }
+      }
+    },
+    "ApiGateway5XxErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Api Gateway 5 XX Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "apiName": [
+                    "test-plugin-test"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "ApiGatewaySample",
+          "select_value": "provider.4xxError.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          }
+        }
+      }
     }
   }
 }
