@@ -12,7 +12,7 @@ import {
 } from './utils/name-normalizer'
 import { NewrelicAlertsConfig, Alert, ResourceAlertOverride } from './types/newrelic-alerts-config'
 import getInfrastructureCondition from './conditions/infrastructure'
-import { ApiGatewayAlert, FunctionAlert } from './constants/alerts'
+import { ApiGatewayAlert, DlqAlert, FunctionAlert } from './constants/alerts'
 
 class NewRelicAlertsPlugin implements Plugin {
   serverless: Serverless
@@ -30,7 +30,7 @@ class NewRelicAlertsPlugin implements Plugin {
     this.policyName = getNormalizedPolicyName(this.serviceName)
 
     this.hooks = {
-      'package:compileEvents': this.compile.bind(this)
+      'after:aws:package:finalize:mergeCustomProviderResources': this.compile.bind(this)
     }
   }
 
@@ -160,6 +160,34 @@ class NewRelicAlertsPlugin implements Plugin {
       }, {})
   }
 
+  getDlqAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+    const dlqs = Object.values(
+      this.serverless.service.provider.compiledCloudFormationTemplate.Resources
+    )
+      .filter(
+        ({ Type: type, Properties: { QueueName: name } }) =>
+          type === 'AWS::SQS::Queue' && name && name.endsWith('-dlq')
+      )
+      .map(({ Properties: { QueueName: name } }) => name)
+
+    if (!dlqs.length) {
+      return {}
+    }
+
+    return alerts
+      .filter(alert => Object.values<Alert>(DlqAlert).includes(alert))
+      .reduce((statements, alert) => {
+        return {
+          ...statements,
+          ...this.getInfrastructureConditionCloudFormation(
+            infrastructureConditionServiceToken,
+            alert,
+            dlqs
+          )
+        }
+      }, {})
+  }
+
   compile() {
     const {
       policyServiceToken,
@@ -175,7 +203,8 @@ class NewRelicAlertsPlugin implements Plugin {
     Object.assign(this.serverless.service.provider.compiledCloudFormationTemplate.Resources, {
       ...this.getPolicyCloudFormation(policyServiceToken),
       ...this.getFunctionAlertsCloudFormation(alerts, infrastructureConditionServiceToken),
-      ...this.getApiGatewayAlertsCloudFormation(alerts, infrastructureConditionServiceToken)
+      ...this.getApiGatewayAlertsCloudFormation(alerts, infrastructureConditionServiceToken),
+      ...this.getDlqAlertsCloudFormation(alerts, infrastructureConditionServiceToken)
     })
   }
 }

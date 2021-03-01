@@ -201,6 +201,44 @@
           }
         }
       }
+    },
+    "DlqVisibleMessagesInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dlq Visible Messages",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "queueName": [
+                    "test-sqs-dlq"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "QueueSample",
+          "select_value": "provider.approximateNumberOfMessagesVisible.Maximum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "SqsQueue"
+        }
+      }
     }
   }
 }

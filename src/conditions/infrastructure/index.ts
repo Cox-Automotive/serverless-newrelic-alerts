@@ -1,9 +1,10 @@
 import { Alert } from '../../types/newrelic-alerts-config'
-import { ApiGatewayAlert, FunctionAlert } from '../../constants/alerts'
+import { ApiGatewayAlert, DlqAlert, FunctionAlert } from '../../constants/alerts'
 import getFunctionDurationInfrastructureCondition from './function-duration'
 import getFunctionErrorsInfrastructureCondition from './function-errors'
 import getFunctionThrottlesInfrastructureCondition from './function-throttles'
 import getApiGateway4xxErrorsInfrastructureCondition from './api-gateway-4xx-errors'
+import getSqsVisibleMessagesInfrastructureCondition from './sqs-visible-messages'
 
 const getInfrastructureCondition = (
   conditionAlert: Alert,
@@ -27,6 +28,8 @@ const getInfrastructureCondition = (
       return getApiGateway4xxErrorsInfrastructureCondition(policyId, conditionName, resourceNames)
     case ApiGatewayAlert.ERRORS_5XX:
       return getApiGateway4xxErrorsInfrastructureCondition(policyId, conditionName, resourceNames)
+    case DlqAlert.VISIBLE_MESSAGES:
+      return getSqsVisibleMessagesInfrastructureCondition(policyId, conditionName, resourceNames)
     default:
       throw new Error('Unknown alert')
   }

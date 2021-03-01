@@ -14,6 +14,9 @@ export type FunctionFilter = Filter<{
 export type ApiGatewayFilter = Filter<{
   apiName: string[]
 }>
+export type SqsFilter = Filter<{
+  queueName: string[]
+}>
 
 export type InfrastructureCondition = {
   policy_id?: Ref
@@ -21,7 +24,7 @@ export type InfrastructureCondition = {
     type: ConditionType
     name: string
     enabled: boolean
-    filter: FunctionFilter | ApiGatewayFilter
+    filter: FunctionFilter | ApiGatewayFilter | SqsFilter
     violation_close_timer: number
     created_at_epoch_millis?: number
     updated_at_epoch_millis?: number
