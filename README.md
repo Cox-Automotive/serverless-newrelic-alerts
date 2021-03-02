@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/Cox-Automotive/serverless-newrelic-alerts.svg?style=shield)](https://circleci.com/gh/Cox-Automotive/serverless-newrelic-alerts)
 
-This serverless plugin allows adding New Relic alerts to a function.
+This serverless plugin allows adding New Relic alerts to a resources.
 The sole responsibility of the plugin is to generate additional
 CloudFormation code with [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html),
 that will create New Relic alerts for the function.
@@ -15,131 +15,289 @@ with 1-2 lines of code in serverless.yml**
 ### Usage
 
 ```yml
+plugins:
+  - serverless-newrelic-alerts
+
+custom:
+  newrelicAlerts:
+    policyServiceToken: arn:aws:test-policy_service_token
+    infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
+    alerts:
+      - functionDuration1Sec
+      - functionErrors
+      - apiGateway4XXErrors
+      - apiGateway5XXErrors
+      - sqsDlqVisibleMessages
+      - dynamoDbSystemErrors
+      - dynamoDbUserErrors
+
 functions:
   under-newrelic-mntrng:
-    handler: handler.endpoint
+    handler: index.endpoint
     alerts:
-      policy_service_token: arn:aws:lambda:<rest of a Lambda ARN>
-      nrql_condition_service_token: arn:aws:lambda:<rest of a Lambda ARN>
-      infrastructure_condition_service_token: arn:aws:lambda:<rest of a Lambda ARN>
-      policies:
-        - name: Plugin Policy Test
-          incident_preference: PER_POLICY
-      infrastructure_conditions:
-        - policy_id: 1069205
-          data:
-            type: infra_metric
-            name: Infra 10s auto created
-            enabled: true
-            filter:
-              and:
-                - in:
-                    displayName:
-                      - ${self:service}-dev-another-one
-            violation_close_timer: 24
-            created_at_epoch_millis: 1601565802841
-            updated_at_epoch_millis: 1602228391394
-            policy_id: 1069205
-            event_type: ServerlessSample
-            select_value: provider.duration.Average
-            comparison: above
-            critical_threshold:
-              value: 10000
-              duration_minutes: 5
-              time_function: all
-            integration_provider: LambdaFunction
-      nrql_conditions:
-        - name: NRQL Alert Condition Test
-          policy_id: <id of the parent policy>
-          enabled: false
-          terms:
-            - duration: '1'
-              operator: 'equal'
-              priority: 'critical'
-              threshold: '1.0'
-              time_function: 'all'
-          nrql:
-            query: 'SELECT count(*) FROM AwsLambdaInvocationError FACET currentTime'
-            since_value: '1'
-    events:
-      - http:
-          path: ping
-          method: get
-plugins:
-  - serverless-newrelic-conditions
+      - name: functionErrors
+        enabled: false
+      - functionThrottles
 ```
 
-Plugin generates and adds the following resources for the CloudFormation configurations:
+Examples of generated CF:
 
+- Policy
 ```json
 {
-  "UnderDashnewrelicDashmntrngLambdaFunctionPluginPolicyTestPolicy": {
+  "PluginTestNewRelicPolicy": {
     "Type": "Custom::NewRelicPolicy",
     "Properties": {
-      "ServiceToken": "arn:aws:lambda:<rest of a Lambda ARN>",
+      "ServiceToken": "arn:aws:test-policy_service_token",
       "policy": {
-        "name": "Plugin Policy Test",
+        "name": "PluginTest TEST",
         "incident_preference": "PER_POLICY"
-      }
-    }
-  },
-  "UnderDashnewrelicDashmntrngLambdaFunctionInfra10sautocreatedInfrastructureCondition": {
-    "Type": "Custom::NewRelicInfrastructureCondition",
-    "Properties": {
-      "ServiceToken": "arn:aws:lambda:<rest of a Lambda ARN>",
-      "policy_id": 1069205,
-      "data": {
-        "type": "infra_metric",
-        "name": "Infra 10s auto",
-        "enabled": true,
-        "filter": {
-          "and": [
-            {
-              "in": {
-                "displayName": ["poc-newrelic-alert-uses-custom-dev-another-one"]
-              }
-            }
-          ]
-        },
-        "violation_close_timer": 12,
-        "created_at_epoch_millis": 4601565802841,
-        "updated_at_epoch_millis": 4602228391394,
-        "policy_id": 1069205,
-        "event_type": "ServerlessSample",
-        "select_value": "provider.duration.Average",
-        "comparison": "above",
-        "critical_threshold": {
-          "value": 10000,
-          "duration_minutes": 5,
-          "time_function": "all"
-        },
-        "integration_provider": "LambdaFunction"
-      }
-    }
-  },
-  "UnderDashnewrelicDashmntrngLambdaFunctionAlertConditionTestNrqlCondition": {
-    "Type": "Custom::NewRelicNrqlCondition",
-    "Properties": {
-      "ServiceToken": "arn:aws:lambda:<rest of a Lambda ARN>",
-      "policy_id": 100000000000000,
-      "nrql_condition": {
-        "name": "Alert Condition Test",
-        "enabled": false,
-        "terms": [
-          {
-            "duration": "1",
-            "operator": "equal",
-            "priority": "critical",
-            "threshold": "1.0",
-            "time_function": "all"
-          }
-        ],
-        "nrql": {
-          "query": "SELECT count(*) FROM AwsLambdaInvocationError FACET currentTime",
-          "since_value": "1"
-        }
       }
     }
   }
 }
+```
+
+- Infrastructure condition
+```json
+{
+  "FunctionThrottlesInfrastructureCondition": {
+    "Type": "Custom::NewRelicInfrastructureCondition",
+    "Properties": {
+      "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+      "policy_id": {
+        "Ref": "PluginTestNewRelicPolicy"
+      },
+      "data": {
+        "type": "infra_metric",
+        "name": "PluginTest TEST - Function Throttles",
+        "enabled": true,
+        "filter": "DEPENDS ON METRIC TYPE",
+        "violation_close_timer": 24,
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "event_type": "DEPENDS ON METRIC TYPE",
+        "select_value": "DEPENDS ON METRIC TYPE",
+        "comparison": "DEPENDS ON METRIC TYPE",
+        "critical_threshold": {
+          "value": "DEPENDS ON METRIC TYPE",
+          "duration_minutes": "DEPENDS ON METRIC TYPE",
+          "time_function": "DEPENDS ON METRIC TYPE",
+        },
+        "integration_provider": "DEPENDS ON METRIC TYPE",
+      }
+    }
+  }
+}
+```
+
+## List of preconfigured metrics 
+
+### Lambda
+
+Alerts configured in custom section of `serverless.yml` will be applied to all functions in stack 
+unless function disable it, alerts configured on function level will be applied 
+only to chosen functions.
+
+Filtering performed by `displayName`
+
+```yml
+functions:
+  under-newrelic-mntrng:
+    handler: index.endpoint
+    alerts:
+      - name: functionErrors
+        enabled: false
+      - functionThrottles
+```
+
+#### Metrics:
+
+- functionDuration1Sec
+```
+"select_value": "provider.duration.Maximum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 1000,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- functionErrors
+```
+"select_value": "provider.errors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- functionThrottles
+```
+"select_value": "provider.throttles.Maximum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+
+### Api Gateway
+
+Alerts configured in custom section of `serverless.yml` will be applied to all apiGateways in stack.
+
+Filtering performed by `apiName`.
+
+#### Metrics:
+
+- apiGateway4XXErrors
+```
+"select_value": "provider.4xxError.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- apiGateway5XXErrors
+```
+"select_value": "provider.5xxError.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+
+### SQS
+
+Filtering performed by `queueName`.
+
+#### DLQ Metrics:
+
+Alerts configured in custom section of `serverless.yml` will be applied to all sqs with name ending with `-dlq` in stack.
+
+- sqsDlqVisibleMessages
+```
+"select_value": "provider.approximateNumberOfMessagesVisible.Maximum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+
+### DynamoDb
+
+Alerts configured in custom section of `serverless.yml` will be applied to all tables in stack.
+Filtering performed by `tableName`.
+
+#### Metric:
+
+- dynamoDbBatchGetSystemErrors
+```
+"select_value": "provider.batchGetSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbBatchWriteSystemErrors
+```
+"select_value": "provider.batchWriteSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbDeleteSystemErrors
+```
+"select_value": "provider.deleteSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbGetSystemErrors
+```
+"select_value": "provider.getSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbPutSystemErrors
+```
+"select_value": "provider.putSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbQuerySystemErrors
+```
+"select_value": "provider.querySystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbScanSystemErrors
+```
+"select_value": "provider.scanSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbUpdateSystemErrors
+```
+"select_value": "provider.updateSystemErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbUserErrors
+```
+"select_value": "provider.userErrors.Sum",
+"comparison": "above",
+"critical_threshold": {
+  "value": 3,
+  "duration_minutes": 5,
+  "time_function": "all"
+}
+```
+- dynamoDbSystemErrors - alias for batch of system errors metrics:
+```
+dynamoDbBatchGetSystemErrors
+dynamoDbBatchWriteSystemErrors
+dynamoDbDeleteSystemErrors
+dynamoDbGetSystemErrors
+dynamoDbPutSystemErrors
+dynamoDbQuerySystemErrors
+dynamoDbScanSystemErrors
+dynamoDbUpdateSystemErrors
 ```

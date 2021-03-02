@@ -23,7 +23,7 @@ const getDynamoDbTableInfrastructureCondition = (
         and: [
           {
             in: {
-              tableNames: tableNames
+              tableName: tableNames
             }
           }
         ]

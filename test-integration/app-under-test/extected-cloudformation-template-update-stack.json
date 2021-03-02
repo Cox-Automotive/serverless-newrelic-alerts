@@ -255,7 +255,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -293,7 +293,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -331,7 +331,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -369,7 +369,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -407,7 +407,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -445,7 +445,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -483,7 +483,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -521,7 +521,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }
@@ -559,7 +559,7 @@
             "and": [
               {
                 "in": {
-                  "tableNames": [
+                  "tableName": [
                     "test-table"
                   ]
                 }

@@ -18,7 +18,7 @@ export type SqsFilter = Filter<{
   queueName: string[]
 }>
 export type DynamoDbFilter = Filter<{
-  tableNames: string[]
+  tableName: string[]
 }>
 
 export type InfrastructureCondition = {
