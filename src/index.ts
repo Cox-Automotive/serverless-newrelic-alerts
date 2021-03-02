@@ -10,9 +10,11 @@ import {
   getNormalizedName,
   getNormalizedPolicyName
 } from './utils/name-normalizer'
-import { NewrelicAlertsConfig, Alert, ResourceAlertOverride } from './types/newrelic-alerts-config'
+import { Alert, NewrelicAlertsConfig, ResourceAlertOverride } from './types/newrelic-alerts-config'
 import getInfrastructureCondition from './conditions/infrastructure'
-import { ApiGatewayAlert, DlqAlert, FunctionAlert } from './constants/alerts'
+import { ApiGatewayAlert, DynamoDbAlert, FunctionAlert, SqsAlert } from './constants/alerts'
+import isAlertOfType from './utils/is-alert-of-type'
+import { AlertsSet, AlertsSetMapping } from './constants/alerts-set'
 
 class NewRelicAlertsPlugin implements Plugin {
   serverless: Serverless
@@ -96,7 +98,7 @@ class NewRelicAlertsPlugin implements Plugin {
     )
 
     const globalConditionStatements = alerts
-      .filter(alert => Object.values<Alert>(FunctionAlert).includes(alert))
+      .filter(alert => isAlertOfType(alert, FunctionAlert))
       .reduce((statements, alert) => {
         return {
           ...statements,
@@ -147,7 +149,7 @@ class NewRelicAlertsPlugin implements Plugin {
     }
 
     return alerts
-      .filter(alert => Object.values<Alert>(ApiGatewayAlert).includes(alert))
+      .filter(alert => isAlertOfType(alert, ApiGatewayAlert))
       .reduce((statements, alert) => {
         return {
           ...statements,
@@ -160,7 +162,7 @@ class NewRelicAlertsPlugin implements Plugin {
       }, {})
   }
 
-  getDlqAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+  getSqsAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
     const dlqs = Object.values(
       this.serverless.service.provider.compiledCloudFormationTemplate.Resources
     )
@@ -174,8 +176,9 @@ class NewRelicAlertsPlugin implements Plugin {
       return {}
     }
 
-    return alerts
-      .filter(alert => Object.values<Alert>(DlqAlert).includes(alert))
+    const sqsAlerts = alerts.filter(alert => isAlertOfType(alert, SqsAlert)) as SqsAlert[]
+    return sqsAlerts
+      .filter(alert => [SqsAlert.DLQ_VISIBLE_MESSAGES].includes(alert))
       .reduce((statements, alert) => {
         return {
           ...statements,
@@ -188,7 +191,36 @@ class NewRelicAlertsPlugin implements Plugin {
       }, {})
   }
 
+  getDynamoDbAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+    const tables = Object.values(
+      this.serverless.service.provider.compiledCloudFormationTemplate.Resources
+    )
+      .filter(({ Type: type }) => type === 'AWS::DynamoDB::Table')
+      .map(({ Properties: { TableName: name } }) => name)
+
+    if (!tables.length) {
+      return {}
+    }
+
+    return alerts
+      .filter(alert => Object.values<Alert>(DynamoDbAlert).includes(alert))
+      .reduce((statements, alert) => {
+        return {
+          ...statements,
+          ...this.getInfrastructureConditionCloudFormation(
+            infrastructureConditionServiceToken,
+            alert,
+            tables
+          )
+        }
+      }, {})
+  }
+
   compile() {
+    if (!this.serverless.service.custom || !this.serverless.service.custom.newrelicAlerts) {
+      return
+    }
+
     const {
       policyServiceToken,
       infrastructureConditionServiceToken,
@@ -200,11 +232,24 @@ class NewRelicAlertsPlugin implements Plugin {
       )
     }
 
+    const expandedAlerts = alerts.reduce<Alert[]>((acc, alert) => {
+      if (isAlertOfType(alert, AlertsSet)) {
+        acc.push(...AlertsSetMapping[alert])
+      } else {
+        acc.push(alert)
+      }
+      return acc
+    }, [])
+
     Object.assign(this.serverless.service.provider.compiledCloudFormationTemplate.Resources, {
       ...this.getPolicyCloudFormation(policyServiceToken),
-      ...this.getFunctionAlertsCloudFormation(alerts, infrastructureConditionServiceToken),
-      ...this.getApiGatewayAlertsCloudFormation(alerts, infrastructureConditionServiceToken),
-      ...this.getDlqAlertsCloudFormation(alerts, infrastructureConditionServiceToken)
+      ...this.getFunctionAlertsCloudFormation(expandedAlerts, infrastructureConditionServiceToken),
+      ...this.getApiGatewayAlertsCloudFormation(
+        expandedAlerts,
+        infrastructureConditionServiceToken
+      ),
+      ...this.getSqsAlertsCloudFormation(expandedAlerts, infrastructureConditionServiceToken),
+      ...this.getDynamoDbAlertsCloudFormation(expandedAlerts, infrastructureConditionServiceToken)
     })
   }
 }

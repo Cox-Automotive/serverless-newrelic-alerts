@@ -192,7 +192,7 @@
             "Ref": "PluginTestNewRelicPolicy"
           },
           "event_type": "ApiGatewaySample",
-          "select_value": "provider.4xxError.Sum",
+          "select_value": "provider.5xxError.Sum",
           "comparison": "above",
           "critical_threshold": {
             "value": 3,
@@ -202,7 +202,7 @@
         }
       }
     },
-    "DlqVisibleMessagesInfrastructureCondition": {
+    "SqsDlqVisibleMessagesInfrastructureCondition": {
       "Type": "Custom::NewRelicInfrastructureCondition",
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
@@ -211,7 +211,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dlq Visible Messages",
+          "name": "PluginTest TEST - Sqs Dlq Visible Messages",
           "enabled": true,
           "filter": {
             "and": [
@@ -237,6 +237,348 @@
             "time_function": "all"
           },
           "integration_provider": "SqsQueue"
+        }
+      }
+    },
+    "DynamoDbBatchGetSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Batch Get System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.batchGetSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbBatchWriteSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Batch Write System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.batchWriteSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbDeleteSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Delete System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.deleteSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbGetSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Get System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.getSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbPutSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Put System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.putSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbQuerySystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Query System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.querySystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbScanSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Scan System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.scanSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbUpdateSystemErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db Update System Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.updateSystemErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
+        }
+      }
+    },
+    "DynamoDbUserErrorsInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Dynamo Db User Errors",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "tableNames": [
+                    "test-table"
+                  ]
+                }
+              }
+            ]
+          },
+          "violation_close_timer": 24,
+          "policy_id": {
+            "Ref": "PluginTestNewRelicPolicy"
+          },
+          "event_type": "DatastoreSample",
+          "select_value": "provider.userErrors.Sum",
+          "comparison": "above",
+          "critical_threshold": {
+            "value": 3,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "DynamoDbTable"
         }
       }
     }

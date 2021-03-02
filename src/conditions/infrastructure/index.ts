@@ -1,10 +1,10 @@
 import { Alert } from '../../types/newrelic-alerts-config'
-import { ApiGatewayAlert, DlqAlert, FunctionAlert } from '../../constants/alerts'
-import getFunctionDurationInfrastructureCondition from './function-duration'
-import getFunctionErrorsInfrastructureCondition from './function-errors'
-import getFunctionThrottlesInfrastructureCondition from './function-throttles'
-import getApiGateway4xxErrorsInfrastructureCondition from './api-gateway-4xx-errors'
-import getSqsVisibleMessagesInfrastructureCondition from './sqs-visible-messages'
+import { ApiGatewayAlert, DynamoDbAlert, FunctionAlert, SqsAlert } from '../../constants/alerts'
+import getFunctionInfrastructureCondition from './function'
+import getApiGatewayInfrastructureCondition from './api-gateway'
+import isAlertOfType from '../../utils/is-alert-of-type'
+import getSqsInfrastructureCondition from './sqs'
+import getDynamoDbTableInfrastructureCondition from './dynamo-db'
 
 const getInfrastructureCondition = (
   conditionAlert: Alert,
@@ -12,26 +12,31 @@ const getInfrastructureCondition = (
   conditionName: string,
   resourceNames: string[]
 ) => {
-  switch (conditionAlert) {
-    case FunctionAlert.DURATION_1_SEC:
-      return getFunctionDurationInfrastructureCondition(
-        policyId,
-        conditionName,
-        resourceNames,
-        1000
-      )
-    case FunctionAlert.ERRORS:
-      return getFunctionErrorsInfrastructureCondition(policyId, conditionName, resourceNames)
-    case FunctionAlert.THROTTLES:
-      return getFunctionThrottlesInfrastructureCondition(policyId, conditionName, resourceNames)
-    case ApiGatewayAlert.ERRORS_4XX:
-      return getApiGateway4xxErrorsInfrastructureCondition(policyId, conditionName, resourceNames)
-    case ApiGatewayAlert.ERRORS_5XX:
-      return getApiGateway4xxErrorsInfrastructureCondition(policyId, conditionName, resourceNames)
-    case DlqAlert.VISIBLE_MESSAGES:
-      return getSqsVisibleMessagesInfrastructureCondition(policyId, conditionName, resourceNames)
-    default:
-      throw new Error('Unknown alert')
+  if (isAlertOfType(conditionAlert, FunctionAlert)) {
+    return getFunctionInfrastructureCondition(
+      conditionAlert,
+      policyId,
+      conditionName,
+      resourceNames
+    )
+  } else if (isAlertOfType(conditionAlert, ApiGatewayAlert)) {
+    return getApiGatewayInfrastructureCondition(
+      conditionAlert,
+      policyId,
+      conditionName,
+      resourceNames
+    )
+  } else if (isAlertOfType(conditionAlert, SqsAlert)) {
+    return getSqsInfrastructureCondition(conditionAlert, policyId, conditionName, resourceNames)
+  } else if (isAlertOfType(conditionAlert, DynamoDbAlert)) {
+    return getDynamoDbTableInfrastructureCondition(
+      conditionAlert,
+      policyId,
+      conditionName,
+      resourceNames
+    )
+  } else {
+    throw new Error('Unknown alert')
   }
 }
 

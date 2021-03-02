@@ -17,6 +17,9 @@ export type ApiGatewayFilter = Filter<{
 export type SqsFilter = Filter<{
   queueName: string[]
 }>
+export type DynamoDbFilter = Filter<{
+  tableNames: string[]
+}>
 
 export type InfrastructureCondition = {
   policy_id?: Ref
@@ -24,7 +27,7 @@ export type InfrastructureCondition = {
     type: ConditionType
     name: string
     enabled: boolean
-    filter: FunctionFilter | ApiGatewayFilter | SqsFilter
+    filter: FunctionFilter | ApiGatewayFilter | SqsFilter | DynamoDbFilter
     violation_close_timer: number
     created_at_epoch_millis?: number
     updated_at_epoch_millis?: number
