@@ -10,5 +10,6 @@ export type ResourceAlertOverride = {
 export type NewrelicAlertsConfig = {
   policyServiceToken: string
   infrastructureConditionServiceToken: string
+  violationCloseTimer?: number
   alerts?: (Alert | AlertsSet)[]
 }

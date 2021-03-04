@@ -8,7 +8,8 @@ const getApiGatewayInfrastructureCondition = (
   alert: ApiGatewayAlert,
   policyId: string,
   conditionName: string,
-  apisNames: string[]
+  apisNames: string[],
+  violationCloseTimer?: number
 ): InfrastructureCondition => {
   const defaultConfig = defaultAlerts[alert]
 
@@ -27,7 +28,7 @@ const getApiGatewayInfrastructureCondition = (
           }
         ]
       },
-      violation_close_timer: 24,
+      violation_close_timer: violationCloseTimer,
       policy_id: { Ref: policyId },
       event_type: EventType.API_GATEWAY_SAMPLE,
       select_value: defaultConfig.selectValue,

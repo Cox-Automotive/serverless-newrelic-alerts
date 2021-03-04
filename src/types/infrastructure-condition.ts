@@ -28,7 +28,7 @@ export type InfrastructureCondition = {
     name: string
     enabled: boolean
     filter: FunctionFilter | ApiGatewayFilter | SqsFilter | DynamoDbFilter
-    violation_close_timer: number
+    violation_close_timer?: number
     created_at_epoch_millis?: number
     updated_at_epoch_millis?: number
     policy_id: Ref

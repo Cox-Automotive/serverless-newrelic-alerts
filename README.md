@@ -22,6 +22,7 @@ custom:
   newrelicAlerts:
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
+    violationCloseTimer: 24
     alerts:
       - functionDuration1Sec
       - functionErrors
@@ -91,6 +92,13 @@ Examples of generated CF:
   }
 }
 ```
+
+## Configuration
+
+- `policyServiceToken` - arn of lambda managing policy (required)
+- `infrastructureConditionServiceToken` - arn of lambda managing infrastructure conditions (required)
+- `violationCloseTimer` - after what time alert conditions should be force-closed - 24h by default, pass `0` to turn off auto closing
+- `alerts` - list of required alerts
 
 ## List of preconfigured metrics 
 

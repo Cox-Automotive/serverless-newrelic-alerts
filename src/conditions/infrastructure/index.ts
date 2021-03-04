@@ -10,30 +10,40 @@ const getInfrastructureCondition = (
   conditionAlert: Alert,
   policyId: string,
   conditionName: string,
-  resourceNames: string[]
+  resourceNames: string[],
+  violationCloseTimer?: number
 ) => {
   if (isAlertOfType(conditionAlert, FunctionAlert)) {
     return getFunctionInfrastructureCondition(
       conditionAlert,
       policyId,
       conditionName,
-      resourceNames
+      resourceNames,
+      violationCloseTimer
     )
   } else if (isAlertOfType(conditionAlert, ApiGatewayAlert)) {
     return getApiGatewayInfrastructureCondition(
       conditionAlert,
       policyId,
       conditionName,
-      resourceNames
+      resourceNames,
+      violationCloseTimer
     )
   } else if (isAlertOfType(conditionAlert, SqsAlert)) {
-    return getSqsInfrastructureCondition(conditionAlert, policyId, conditionName, resourceNames)
+    return getSqsInfrastructureCondition(
+      conditionAlert,
+      policyId,
+      conditionName,
+      resourceNames,
+      violationCloseTimer
+    )
   } else if (isAlertOfType(conditionAlert, DynamoDbAlert)) {
     return getDynamoDbTableInfrastructureCondition(
       conditionAlert,
       policyId,
       conditionName,
-      resourceNames
+      resourceNames,
+      violationCloseTimer
     )
   } else {
     throw new Error('Unknown alert')

@@ -9,7 +9,8 @@ const getFunctionInfrastructureCondition = (
   alert: FunctionAlert,
   policyId: string,
   conditionName: string,
-  functionNames: string[]
+  functionNames: string[],
+  violationCloseTimer?: number
 ): InfrastructureCondition => {
   const defaultConfig = defaultAlerts[alert]
 
@@ -28,7 +29,7 @@ const getFunctionInfrastructureCondition = (
           }
         ]
       },
-      violation_close_timer: 24,
+      violation_close_timer: violationCloseTimer,
       policy_id: { Ref: policyId },
       event_type: EventType.SERVERLESS_SAMPLE,
       select_value: defaultConfig.selectValue,

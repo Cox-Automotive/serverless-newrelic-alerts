@@ -7,6 +7,7 @@ custom:
   newrelicAlerts:
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
+    violationCloseTimer: 24
     alerts:
       - functionDuration1Sec
       - functionErrors

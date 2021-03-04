@@ -23,6 +23,10 @@ class NewRelicAlertsPlugin implements Plugin {
   serviceName: string
   alertName: string
   policyName: string
+  policyServiceToken: string
+  infrastructureConditionServiceToken: string
+  violationCloseTimer?: number
+  alerts: Alert[]
 
   constructor(serverless: Serverless) {
     this.serverless = serverless
@@ -31,17 +35,38 @@ class NewRelicAlertsPlugin implements Plugin {
     this.alertName = `${this.serviceName} ${upperCase(this.awsProvider.getStage())}`
     this.policyName = getNormalizedPolicyName(this.serviceName)
 
-    this.hooks = {
-      'after:aws:package:finalize:mergeCustomProviderResources': this.compile.bind(this)
+    if (this.serverless.service.custom && this.serverless.service.custom.newrelicAlerts) {
+      this.hooks = {
+        'after:aws:package:finalize:mergeCustomProviderResources': this.compile.bind(this)
+      }
+
+      const {
+        policyServiceToken,
+        infrastructureConditionServiceToken,
+        violationCloseTimer,
+        alerts = []
+      }: NewrelicAlertsConfig = this.serverless.service.custom.newrelicAlerts
+      if (!policyServiceToken || !infrastructureConditionServiceToken) {
+        throw Error(
+          'newrelic alerts plugin requires both policyServiceToken and infrastructureConditionServiceToken'
+        )
+      }
+
+      this.policyServiceToken = policyServiceToken
+      this.infrastructureConditionServiceToken = infrastructureConditionServiceToken
+      this.violationCloseTimer = violationCloseTimer
+      this.alerts = this.getAlerts(alerts)
+    } else {
+      this.hooks = {}
     }
   }
 
-  getPolicyCloudFormation(policyServiceToken: string) {
+  getPolicyCloudFormation() {
     return {
       [this.policyName]: {
         Type: 'Custom::NewRelicPolicy',
         Properties: {
-          ServiceToken: policyServiceToken,
+          ServiceToken: this.policyServiceToken,
           policy: {
             name: this.alertName,
             incident_preference: 'PER_POLICY'
@@ -51,21 +76,18 @@ class NewRelicAlertsPlugin implements Plugin {
     }
   }
 
-  getInfrastructureConditionCloudFormation(
-    infrastructureConditionServiceToken: string,
-    alert: Alert,
-    functionNames: string[]
-  ) {
+  getInfrastructureConditionCloudFormation(alert: Alert, resourcesNames: string[]) {
     return {
       [`${getNormalizedInfrastructureConditionName(alert)}`]: {
         Type: 'Custom::NewRelicInfrastructureCondition',
         Properties: {
-          ServiceToken: infrastructureConditionServiceToken,
+          ServiceToken: this.infrastructureConditionServiceToken,
           ...getInfrastructureCondition(
             alert,
             this.policyName,
             `${this.alertName} - ${startCase(alert)}`,
-            functionNames
+            resourcesNames,
+            this.violationCloseTimer
           )
         }
       }
@@ -84,9 +106,9 @@ class NewRelicAlertsPlugin implements Plugin {
     return Boolean(alerts.length)
   }
 
-  getFunctionAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+  getFunctionAlertsCloudFormation() {
     const functionsNames = this.serverless.service.getAllFunctionsNames()
-    const functionAlerts = alerts.filter(alert => isAlertOfType(alert, FunctionAlert))
+    const functionAlerts = this.alerts.filter(alert => isAlertOfType(alert, FunctionAlert))
 
     const hasGlobalAlerts = this.checkEligibility(functionAlerts, functionsNames)
 
@@ -118,7 +140,6 @@ class NewRelicAlertsPlugin implements Plugin {
           return {
             ...statements,
             ...this.getInfrastructureConditionCloudFormation(
-              infrastructureConditionServiceToken,
               alert,
               functionsNames.filter(
                 functionName =>
@@ -136,7 +157,6 @@ class NewRelicAlertsPlugin implements Plugin {
         return {
           ...statements,
           ...this.getInfrastructureConditionCloudFormation(
-            infrastructureConditionServiceToken,
             alert as Alert,
             Object.entries(functions)
               .filter(([functionName, isAlertEnabled]) => isAlertEnabled)
@@ -153,13 +173,13 @@ class NewRelicAlertsPlugin implements Plugin {
     }
   }
 
-  getApiGatewayAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+  getApiGatewayAlertsCloudFormation() {
     const apiGateways = Object.values(
       this.serverless.service.provider.compiledCloudFormationTemplate.Resources
     )
       .filter(({ Type: type }) => type === 'AWS::ApiGateway::RestApi')
       .map(({ Properties: { Name: name } }) => name)
-    const apiGatewayAlerts = alerts.filter(alert => isAlertOfType(alert, ApiGatewayAlert))
+    const apiGatewayAlerts = this.alerts.filter(alert => isAlertOfType(alert, ApiGatewayAlert))
 
     if (!this.checkEligibility(apiGatewayAlerts, apiGateways)) {
       return {}
@@ -168,16 +188,12 @@ class NewRelicAlertsPlugin implements Plugin {
     return apiGatewayAlerts.reduce((statements, alert) => {
       return {
         ...statements,
-        ...this.getInfrastructureConditionCloudFormation(
-          infrastructureConditionServiceToken,
-          alert,
-          apiGateways
-        )
+        ...this.getInfrastructureConditionCloudFormation(alert, apiGateways)
       }
     }, {})
   }
 
-  getSqsAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+  getSqsAlertsCloudFormation() {
     const dlqs = Object.values(
       this.serverless.service.provider.compiledCloudFormationTemplate.Resources
     )
@@ -186,7 +202,7 @@ class NewRelicAlertsPlugin implements Plugin {
           type === 'AWS::SQS::Queue' && name && name.endsWith('-dlq')
       )
       .map(({ Properties: { QueueName: name } }) => name)
-    const sqsAlerts = alerts.filter(alert => isAlertOfType(alert, SqsAlert)) as SqsAlert[]
+    const sqsAlerts = this.alerts.filter(alert => isAlertOfType(alert, SqsAlert)) as SqsAlert[]
     const dlqAlerts = sqsAlerts.filter(alert => [SqsAlert.DLQ_VISIBLE_MESSAGES].includes(alert))
 
     if (!this.checkEligibility(dlqAlerts, dlqs)) {
@@ -196,22 +212,18 @@ class NewRelicAlertsPlugin implements Plugin {
     return dlqAlerts.reduce((statements, alert) => {
       return {
         ...statements,
-        ...this.getInfrastructureConditionCloudFormation(
-          infrastructureConditionServiceToken,
-          alert,
-          dlqs
-        )
+        ...this.getInfrastructureConditionCloudFormation(alert, dlqs)
       }
     }, {})
   }
 
-  getDynamoDbAlertsCloudFormation(alerts: Alert[], infrastructureConditionServiceToken: string) {
+  getDynamoDbAlertsCloudFormation() {
     const tables = Object.values(
       this.serverless.service.provider.compiledCloudFormationTemplate.Resources
     )
       .filter(({ Type: type }) => type === 'AWS::DynamoDB::Table')
       .map(({ Properties: { TableName: name } }) => name)
-    const dynamoDbAlerts = alerts.filter(alert =>
+    const dynamoDbAlerts = this.alerts.filter(alert =>
       Object.values<Alert>(DynamoDbAlert).includes(alert)
     )
 
@@ -222,11 +234,7 @@ class NewRelicAlertsPlugin implements Plugin {
     return dynamoDbAlerts.reduce((statements, alert) => {
       return {
         ...statements,
-        ...this.getInfrastructureConditionCloudFormation(
-          infrastructureConditionServiceToken,
-          alert,
-          tables
-        )
+        ...this.getInfrastructureConditionCloudFormation(alert, tables)
       }
     }, {})
   }
@@ -252,31 +260,12 @@ class NewRelicAlertsPlugin implements Plugin {
   }
 
   compile() {
-    if (!this.serverless.service.custom || !this.serverless.service.custom.newrelicAlerts) {
-      return
-    }
-
-    const {
-      policyServiceToken,
-      infrastructureConditionServiceToken,
-      alerts = []
-    }: NewrelicAlertsConfig = this.serverless.service.custom.newrelicAlerts
-    if (!policyServiceToken || !infrastructureConditionServiceToken) {
-      throw Error(
-        'newrelic alerts plugin requires both policyServiceToken and infrastructureConditionServiceToken'
-      )
-    }
-
-    const filteredAlerts = this.getAlerts(alerts)
     Object.assign(this.serverless.service.provider.compiledCloudFormationTemplate.Resources, {
-      ...this.getPolicyCloudFormation(policyServiceToken),
-      ...this.getFunctionAlertsCloudFormation(filteredAlerts, infrastructureConditionServiceToken),
-      ...this.getApiGatewayAlertsCloudFormation(
-        filteredAlerts,
-        infrastructureConditionServiceToken
-      ),
-      ...this.getSqsAlertsCloudFormation(filteredAlerts, infrastructureConditionServiceToken),
-      ...this.getDynamoDbAlertsCloudFormation(filteredAlerts, infrastructureConditionServiceToken)
+      ...this.getPolicyCloudFormation(),
+      ...this.getFunctionAlertsCloudFormation(),
+      ...this.getApiGatewayAlertsCloudFormation(),
+      ...this.getSqsAlertsCloudFormation(),
+      ...this.getDynamoDbAlertsCloudFormation()
     })
   }
 }

@@ -9,7 +9,8 @@ const getDynamoDbTableInfrastructureCondition = (
   alert: DynamoDbAlert,
   policyId: string,
   conditionName: string,
-  tableNames: string[]
+  tableNames: string[],
+  violationCloseTimer?: number
 ): InfrastructureCondition => {
   const defaultConfig = defaultAlerts[alert]
 
@@ -28,7 +29,7 @@ const getDynamoDbTableInfrastructureCondition = (
           }
         ]
       },
-      violation_close_timer: 24,
+      violation_close_timer: violationCloseTimer,
       policy_id: { Ref: policyId },
       event_type: EventType.DATASTORE_SAMPLE,
       select_value: defaultConfig.selectValue,
