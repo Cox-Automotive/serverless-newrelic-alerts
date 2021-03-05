@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/Cox-Automotive/serverless-newrelic-alerts.svg?style=shield)](https://circleci.com/gh/Cox-Automotive/serverless-newrelic-alerts)
 
-This serverless plugin allows adding New Relic alerts to a resources.
+This serverless plugin allows adding New Relic alerts to resources.
 The sole responsibility of the plugin is to generate additional
 CloudFormation code with [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html),
 that will create New Relic alerts for the function.
