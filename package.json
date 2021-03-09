@@ -40,8 +40,7 @@
   },
   "release": {
     "branches": [
-      "main",
-      "feature/circleci"
+      "main"
     ]
   },
   "lint-staged": {
