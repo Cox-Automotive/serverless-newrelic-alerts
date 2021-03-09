@@ -2,13 +2,8 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "es5",
-    "module": "commonjs",
-    "lib": [
-      "es2015",
-      "es2016",
-      "es2017",
-      "dom"
-    ],
+    "module": "ESNext",
+    "lib": ["es2015", "es2016", "es2017", "dom"],
     "strict": false,
     "sourceMap": true,
     "declaration": true,
@@ -18,12 +13,7 @@
     "strictNullChecks": true,
     "declarationDir": "dist/types",
     "outDir": "dist/lib",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": [
-    "src",
-    "test"
-  ]
+  "include": ["src", "test"]
 }
