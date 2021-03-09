@@ -1,5 +1,4 @@
-import upperFirst from 'lodash/upperFirst'
-import camelCase from 'lodash/camelCase'
+import { upperFirst, camelCase } from 'lodash'
 
 export const getNormalizedName = (name: string) => upperFirst(camelCase(name))
 

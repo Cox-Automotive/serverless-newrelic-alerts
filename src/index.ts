@@ -1,9 +1,7 @@
 import Plugin from 'serverless/classes/Plugin'
 import AwsProvider from 'serverless/plugins/aws/provider/awsProvider'
 import Serverless from 'serverless'
-import startCase from 'lodash/startCase'
-import upperCase from 'lodash/upperCase'
-import isString from 'lodash/isString'
+import { startCase, upperCase, isString } from 'lodash'
 
 import {
   getNormalizedInfrastructureConditionName,
@@ -175,7 +173,7 @@ class NewRelicAlertsPlugin implements Plugin {
 
   getApiGatewayAlertsCloudFormation() {
     const apiGateways = Object.values(
-      this.serverless.service.provider.compiledCloudFormationTemplate.Resources
+      this.serverless.service.provider.compiledCloudFormationTemplate.Resources || {}
     )
       .filter(({ Type: type }) => type === 'AWS::ApiGateway::RestApi')
       .map(({ Properties: { Name: name } }) => name)
@@ -195,7 +193,7 @@ class NewRelicAlertsPlugin implements Plugin {
 
   getSqsAlertsCloudFormation() {
     const dlqs = Object.values(
-      this.serverless.service.provider.compiledCloudFormationTemplate.Resources
+      this.serverless.service.provider.compiledCloudFormationTemplate.Resources || {}
     )
       .filter(
         ({ Type: type, Properties: { QueueName: name } }) =>
@@ -219,7 +217,7 @@ class NewRelicAlertsPlugin implements Plugin {
 
   getDynamoDbAlertsCloudFormation() {
     const tables = Object.values(
-      this.serverless.service.provider.compiledCloudFormationTemplate.Resources
+      this.serverless.service.provider.compiledCloudFormationTemplate.Resources || {}
     )
       .filter(({ Type: type }) => type === 'AWS::DynamoDB::Table')
       .map(({ Properties: { TableName: name } }) => name)
