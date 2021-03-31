@@ -1,9 +1,11 @@
 import { ApiGatewayAlert } from '../../../constants/alerts'
 import { Comparison } from '../../../constants/comparison'
+import { namespaceMapping } from '../../../constants/namespace-mapping'
 import { TimeFunction } from '../../../constants/time-function'
 
-const defaultAlerts = {
+const defaultAPIGwAlerts = {
   [ApiGatewayAlert.ERRORS_4XX]: {
+    ...namespaceMapping['AWS::ApiGateway::RestApi'],
     selectValue: 'provider.4xxError.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -13,6 +15,7 @@ const defaultAlerts = {
     }
   },
   [ApiGatewayAlert.ERRORS_5XX]: {
+    ...namespaceMapping['AWS::ApiGateway::RestApi'],
     selectValue: 'provider.5xxError.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -23,4 +26,4 @@ const defaultAlerts = {
   }
 }
 
-export default defaultAlerts
+export default defaultAPIGwAlerts

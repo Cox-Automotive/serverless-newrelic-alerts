@@ -1,9 +1,11 @@
-import { FunctionAlert, SqsAlert } from '../../../constants/alerts'
+import { SqsAlert } from '../../../constants/alerts'
 import { Comparison } from '../../../constants/comparison'
+import { namespaceMapping } from '../../../constants/namespace-mapping'
 import { TimeFunction } from '../../../constants/time-function'
 
-const defaultAlerts = {
+const defaultSQSAlerts = {
   [SqsAlert.DLQ_VISIBLE_MESSAGES]: {
+    ...namespaceMapping['AWS::SQS::Queue'],
     selectValue: 'provider.approximateNumberOfMessagesVisible.Maximum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -14,4 +16,4 @@ const defaultAlerts = {
   }
 }
 
-export default defaultAlerts
+export default defaultSQSAlerts
