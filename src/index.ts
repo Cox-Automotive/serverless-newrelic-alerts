@@ -155,8 +155,11 @@ class NewRelicPlugin implements Plugin {
   }
 
   getFunctionAlertsCloudFormation() {
-    const localFunctionAlerts = this.getLocalFunctionAlerts()
-    const globalFunctionAlerts = this.getGlobalFunctionAlerts(localFunctionAlerts)
+    let localFunctionAlerts = this.getLocalFunctionAlerts()
+    let globalFunctionAlerts = this.getGlobalFunctionAlerts(localFunctionAlerts)
+
+    localFunctionAlerts = localFunctionAlerts.filter(alert => alert.resources.length > 0)
+    globalFunctionAlerts = globalFunctionAlerts.filter(alert => alert.resources.length > 0)
 
     console.info('localFunctionAlerts=', localFunctionAlerts)
     console.info('globalFunctionAlerts=', globalFunctionAlerts)
@@ -174,51 +177,27 @@ class NewRelicPlugin implements Plugin {
     const propertyName = namespaceMapping[namespace].propertyName
     const alertType = namespaceMapping[namespace].alertType
 
-    const globalAlerts = this.globalAlerts.filter(alert => isAlertOfType(alert.type, alertType))
+    let globalAlerts = this.globalAlerts.filter(alert => isAlertOfType(alert.type, alertType))
 
     globalAlerts.forEach(alert => {
-      const resources = Object.values(
+      let resources = Object.values(
         this.serverless.service.provider.compiledCloudFormationTemplate.Resources || {}
       )
-        .filter(
-          ({ Type: type, Properties: { [propertyName]: name } }) =>
-            type === namespace && name && name.endsWith(alert.filter || '')
-        )
+        .filter(({ Type: type }) => type === namespace)
         .map(({ Properties: { [propertyName]: name } }) => name)
+
+      if (alert.filter) {
+        resources = resources.filter(resource => resource.indexOf(alert.filter) !== -1)
+      }
 
       alert.resources = resources
     })
 
+    globalAlerts = globalAlerts.filter(alert => alert.resources.length > 0)
+
     console.info(`${namespace} global alerts=`, globalAlerts)
 
     const globalConditionStatements = this.convertToCloudFormation(globalAlerts)
-
-    return {
-      ...globalConditionStatements
-    }
-  }
-
-  getSqsAlertsCloudFormation() {
-    const resources = Object.values(
-      this.serverless.service.provider.compiledCloudFormationTemplate.Resources || {}
-    )
-      .filter(
-        ({ Type: type, Properties: { QueueName: name } }) =>
-          type === 'AWS::SQS::Queue' && name && name.endsWith('-dlq')
-      )
-      .map(({ Properties: { QueueName: name } }) => name)
-
-    const globalSqsAlerts = this.globalAlerts.filter(alert => isAlertOfType(alert.type, SqsAlert))
-
-    globalSqsAlerts.forEach(alert => (alert.resources = resources))
-
-    console.info('globalSqsAlerts=', globalSqsAlerts)
-
-    const globalConditionStatements = this.convertToCloudFormation(
-      globalSqsAlerts.filter(alert =>
-        [SqsAlert.DLQ_VISIBLE_MESSAGES].includes(alert.type as SqsAlert)
-      )
-    )
 
     return {
       ...globalConditionStatements
@@ -235,7 +214,7 @@ class NewRelicPlugin implements Plugin {
     const violationCloseTimer =
       !isString(alertConfig) && alertConfig.violationCloseTimer
         ? alertConfig.violationCloseTimer
-        : this.violationCloseTimer
+        : this.violationCloseTimer || 24
 
     const alert: Alert = {
       type: alertType,

@@ -31,7 +31,7 @@ const getInfrastructureCondition = (alert, policyId) => {
       }
     }
   } else {
-    throw new Error('Unknown alert')
+    console.error('Unknown alert=', alert)
   }
 }
 

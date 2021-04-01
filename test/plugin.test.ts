@@ -85,29 +85,6 @@ describe('Newrelic Alert Plugin', () => {
     })
   })
 
-  describe('checkEligibility', () => {
-    it('should return true if there are both resources and alerts', () => {
-      const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      expect(plugin.checkEligibility([FunctionAlert.THROTTLES], ['some res'])).toBe(true)
-    })
-
-    it('should return false if there are no alerts', () => {
-      const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      expect(plugin.checkEligibility([], ['some res'])).toBe(false)
-    })
-
-    it('should return false if there are no resources', () => {
-      const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      expect(plugin.checkEligibility([], [])).toBe(false)
-    })
-
-    it('should log warn if there are no resources for alerts configured', () => {
-      const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      plugin.checkEligibility([FunctionAlert.THROTTLES], [])
-      expect(logMock).toBeCalled()
-    })
-  })
-
   describe('getFunctionAlertsCloudFormation', () => {
     it('should generate global alerts for all functions', () => {
       const plugin = new NewRelicPlugin(
@@ -134,37 +111,6 @@ describe('Newrelic Alert Plugin', () => {
       expect(cf).toMatchSnapshot()
     })
 
-    it("shouldn't generate global alerts for function if alert disabled locally", () => {
-      const plugin = new NewRelicPlugin(
-        getServerless(
-          {
-            ...minimalConfig,
-            alerts: Object.values(FunctionAlert)
-          },
-          {
-            functions: [
-              {
-                name: 'test-function',
-                displayName: 'test-service-test-function'
-              },
-              {
-                name: 'test-function-2',
-                displayName: 'test-service-test-function-2',
-                alerts: [
-                  {
-                    name: FunctionAlert.THROTTLES,
-                    enabled: false
-                  }
-                ]
-              }
-            ]
-          }
-        )
-      )
-      const cf = plugin.getFunctionAlertsCloudFormation()
-      expect(cf.FunctionThrottlesInfrastructureCondition.Properties.data.filter).toMatchSnapshot()
-    })
-
     it('should generate local defined alerts functions', () => {
       const plugin = new NewRelicPlugin(
         getServerless(
@@ -187,13 +133,10 @@ describe('Newrelic Alert Plugin', () => {
         )
       )
       const cf = plugin.getFunctionAlertsCloudFormation()
-      expect(cf.FunctionDuration1SecInfrastructureCondition).toBeDefined()
-      expect(
-        cf.FunctionDuration1SecInfrastructureCondition.Properties.data.filter
-      ).toMatchSnapshot()
+      expect(cf).toMatchSnapshot()
     })
 
-    it("shouldn't fail if there is no functions", () => {
+    it("shouldn't fail if there are no functions", () => {
       const plugin = new NewRelicPlugin(
         getServerless({
           ...minimalConfig,
@@ -204,7 +147,7 @@ describe('Newrelic Alert Plugin', () => {
       expect(cf).toEqual({})
     })
 
-    it("shouldn't fail if there is no alerts", () => {
+    it("shouldn't fail if there are no alerts", () => {
       const plugin = new NewRelicPlugin(
         getServerless(
           {
@@ -252,22 +195,22 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getApiGatewayAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::ApiGateway::RestApi')
       expect(cf).toMatchSnapshot()
     })
 
-    it("shouldn't fail if there is no api gateways", () => {
+    it("shouldn't fail if there are no api gateways", () => {
       const plugin = new NewRelicPlugin(
         getServerless({
           ...minimalConfig,
           alerts: [...Object.values(FunctionAlert), ...Object.values(ApiGatewayAlert)]
         })
       )
-      const cf = plugin.getApiGatewayAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::ApiGateway::RestApi')
       expect(cf).toEqual({})
     })
 
-    it("shouldn't fail if there is no alerts", () => {
+    it("shouldn't fail if there are no alerts", () => {
       const plugin = new NewRelicPlugin(
         getServerless(
           {
@@ -286,7 +229,7 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getApiGatewayAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::ApiGateway::RestApi')
       expect(cf).toEqual({})
     })
   })
@@ -297,7 +240,13 @@ describe('Newrelic Alert Plugin', () => {
         getServerless(
           {
             ...minimalConfig,
-            alerts: [...Object.values(DynamoDbAlert), SqsAlert.DLQ_VISIBLE_MESSAGES]
+            alerts: [
+              ...Object.values(DynamoDbAlert),
+              {
+                type: SqsAlert.DLQ_VISIBLE_MESSAGES,
+                filter: '-dlq'
+              }
+            ]
           },
           {
             resources: {
@@ -317,16 +266,21 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getSqsAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::SQS::Queue')
       expect(cf).toMatchSnapshot()
     })
 
-    it("shouldn't fail if there is no dead letter queues", () => {
+    it("shouldn't fail if there are no dead letter queues", () => {
       const plugin = new NewRelicPlugin(
         getServerless(
           {
             ...minimalConfig,
-            alerts: [SqsAlert.DLQ_VISIBLE_MESSAGES, ...Object.values(ApiGatewayAlert)]
+            alerts: [
+              {
+                type: SqsAlert.DLQ_VISIBLE_MESSAGES,
+                filter: '-dlq'
+              }
+            ]
           },
           {
             resources: {
@@ -340,11 +294,11 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getSqsAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::SQS::Queue')
       expect(cf).toEqual({})
     })
 
-    it("shouldn't fail if there is no alerts", () => {
+    it("shouldn't fail if there are no alerts", () => {
       const plugin = new NewRelicPlugin(
         getServerless(
           {
@@ -363,7 +317,7 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getSqsAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::SQS::Queue')
       expect(cf).toEqual({})
     })
   })
@@ -394,22 +348,22 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getDynamoDbAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::DynamoDB::Table')
       expect(cf).toMatchSnapshot()
     })
 
-    it("shouldn't fail if there is no dynamo tables", () => {
+    it("shouldn't fail if there are no dynamo tables", () => {
       const plugin = new NewRelicPlugin(
         getServerless({
           ...minimalConfig,
           alerts: [...Object.values(DynamoDbAlert), ...Object.values(ApiGatewayAlert)]
         })
       )
-      const cf = plugin.getDynamoDbAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::DynamoDB::Table')
       expect(cf).toEqual({})
     })
 
-    it("shouldn't fail if there is no alerts", () => {
+    it("shouldn't fail if there are no alerts", () => {
       const plugin = new NewRelicPlugin(
         getServerless(
           {
@@ -428,16 +382,16 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
-      const cf = plugin.getDynamoDbAlertsCloudFormation()
+      const cf = plugin.getAlertsCloudFormation('AWS::DynamoDB::Table')
       expect(cf).toEqual({})
     })
   })
 
-  describe('getAlerts', () => {
+  describe('getGlobalAlerts', () => {
     it('should spread all alerts set', () => {
       const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      const alerts = plugin.getAlerts([AlertsSet.DYNAMO_DB_SYSTEM_ERRORS])
-      expect(alerts).toEqual([
+      const alerts = plugin.getGlobalAlerts([AlertsSet.DYNAMO_DB_SYSTEM_ERRORS])
+      const alertSet = [
         DynamoDbAlert.BATCH_GET_SYSTEM_ERRORS,
         DynamoDbAlert.BATCH_WRITE_SYSTEM_ERRORS,
         DynamoDbAlert.DELETE_SYSTEM_ERRORS,
@@ -446,15 +400,24 @@ describe('Newrelic Alert Plugin', () => {
         DynamoDbAlert.QUERY_SYSTEM_ERRORS,
         DynamoDbAlert.SCAN_SYSTEM_ERRORS,
         DynamoDbAlert.UPDATE_SYSTEM_ERRORS
-      ])
-      expect(alerts).not.toContain(AlertsSet.DYNAMO_DB_SYSTEM_ERRORS)
+      ]
+
+      expect(alerts.map(alert => alert.type)).toEqual(alertSet)
+      expect(alerts.length).toEqual(alertSet.length)
     })
 
     it('should filter out with warning all unknown alerts', () => {
       const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      const alerts = plugin.getAlerts([FunctionAlert.THROTTLES, 'unknownAlert'])
-      expect(alerts).toContain(FunctionAlert.THROTTLES)
-      expect(alerts).not.toContain('unknownAlert')
+      const alerts = plugin.getGlobalAlerts([FunctionAlert.THROTTLES, 'unknownAlert'])
+      expect(alerts).toEqual([
+        {
+          enabled: true,
+          resources: [],
+          title: 'TestService TEST - Function Throttles',
+          type: FunctionAlert.THROTTLES,
+          violationCloseTimer: 24
+        }
+      ])
     })
   })
 })
