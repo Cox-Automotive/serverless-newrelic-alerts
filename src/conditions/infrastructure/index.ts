@@ -1,52 +1,37 @@
-import { Alert } from '../../types/newrelic-alerts-config'
-import { ApiGatewayAlert, DynamoDbAlert, FunctionAlert, SqsAlert } from '../../constants/alerts'
-import getFunctionInfrastructureCondition from './function'
-import getApiGatewayInfrastructureCondition from './api-gateway'
-import isAlertOfType from '../../utils/is-alert-of-type'
-import getSqsInfrastructureCondition from './sqs'
-import getDynamoDbTableInfrastructureCondition from './dynamo-db'
+import { defaultAlertTypes } from '../../constants/alerts'
+import { ConditionType } from '../../constants/condition-type'
+import defaultAlerts from './default-alerts'
 
-const getInfrastructureCondition = (
-  conditionAlert: Alert,
-  policyId: string,
-  conditionName: string,
-  resourceNames: string[],
-  violationCloseTimer?: number
-) => {
-  if (isAlertOfType(conditionAlert, FunctionAlert)) {
-    return getFunctionInfrastructureCondition(
-      conditionAlert,
-      policyId,
-      conditionName,
-      resourceNames,
-      violationCloseTimer
-    )
-  } else if (isAlertOfType(conditionAlert, ApiGatewayAlert)) {
-    return getApiGatewayInfrastructureCondition(
-      conditionAlert,
-      policyId,
-      conditionName,
-      resourceNames,
-      violationCloseTimer
-    )
-  } else if (isAlertOfType(conditionAlert, SqsAlert)) {
-    return getSqsInfrastructureCondition(
-      conditionAlert,
-      policyId,
-      conditionName,
-      resourceNames,
-      violationCloseTimer
-    )
-  } else if (isAlertOfType(conditionAlert, DynamoDbAlert)) {
-    return getDynamoDbTableInfrastructureCondition(
-      conditionAlert,
-      policyId,
-      conditionName,
-      resourceNames,
-      violationCloseTimer
-    )
+const getInfrastructureCondition = (alert, policyId) => {
+  if (defaultAlertTypes.includes(alert.type)) {
+    const defaultConfig = defaultAlerts[alert.type]
+    return {
+      policy_id: { Ref: policyId },
+      data: {
+        type: ConditionType.INFRA_METRIC,
+        name: alert.title,
+        enabled: alert.enabled,
+        filter: {
+          and: [
+            {
+              in: {
+                [defaultConfig.filterTypeName]: alert.resources
+              }
+            }
+          ]
+        },
+        policy_id: { Ref: policyId },
+        violation_close_timer: alert.violationCloseTimer,
+        comparison: alert.comparison || defaultConfig.comparison,
+        select_value: alert.metric || defaultConfig.selectValue,
+        critical_threshold: alert.criticalThreshold || defaultConfig.criticalThreshold,
+        integration_provider: defaultConfig.integrationProvider,
+        event_type: defaultConfig.eventType,
+        runbook_url: alert.runbookURL
+      }
+    }
   } else {
-    throw new Error('Unknown alert')
+    console.error('Unknown alert=', alert)
   }
 }
 
