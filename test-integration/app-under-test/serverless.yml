@@ -4,35 +4,18 @@ plugins:
   - serverless-newrelic-alerts
 
 custom:
-  newrelic:
-    incidentPreference: 'PER_CONDITION'
-    policyServiceToken: arn:aws:lambda:us-east-1:577152972443:function:infrastructure-new-relic-alerts-alert-policy-dev
-    infrastructureConditionServiceToken: arn:aws:lambda:us-east-1:577152972443:function:infrastructure-new-relic-alerts-infrastructure-alert-dev
+  newrelicAlerts:
+    policyServiceToken: arn:aws:test-policy_service_token
+    infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
     violationCloseTimer: 24
-    definitions:
-      customAlert1:
-        namespace: 'AWS::Lambda::Function'
-        title: 'Custom Alert 1'
-        runbookURL: 'https://aws.amazon.com/lambda/'
-        metric: 'provider.4xxError.Sum'
-        violationCloseTimer: 4
-        criticalThreshold:
-          value: 5
-          duration: 300
-        comparison: above
     alerts:
-      - type: functionDuration1Sec
-        title: 'Duration 1 sec'
-        runbookURL: 'https://aws.amazon.com/lambda/'
+      - functionDuration1Sec
       - functionErrors
-      - type: apiGateway4XXErrors
-        enabled: true
+      - apiGateway4XXErrors
       - apiGateway5XXErrors
-      - type: sqsDlqVisibleMessages
-        filter: '-dlq'
-      - type: dynamoDbSystemErrors
-        enabled: false
-     # - dynamoDbUserErrors
+      - sqsDlqVisibleMessages
+      - dynamoDbSystemErrors
+      - dynamoDbUserErrors
 
 provider:
   name: aws
@@ -40,7 +23,7 @@ provider:
   stage: test
 
 functions:
-  ga-lambda:
+  under-newrelic-mntrng:
     handler: index.endpoint
     events:
       - http:
@@ -52,15 +35,14 @@ functions:
   dummy-lambda:
     handler: index.endpoint
     alerts:
-      - type: functionThrottles
-        title: 'Dummy Throttles'
-        runbookURL: 'https://aws.amazon.com/lambda/'
+      - name: functionThrottles
+        enabled: true
       - functionErrors
 
   test-lambda:
     handler: index.endpoint
     alerts:
-      - type: functionDuration1Sec
+      - name: functionDuration1Sec
         enabled: false
 
 resources:

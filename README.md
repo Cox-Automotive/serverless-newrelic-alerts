@@ -21,32 +21,25 @@ plugins:
   - serverless-newrelic-alerts
 
 custom:
-  newrelic:
-    incidentPreference: 'PER_CONDITION'
+  newrelicAlerts:
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
     violationCloseTimer: 24
     alerts:
-      - type: functionDuration1Sec
-        title: 'Duration 1 sec'
-        runbookURL: 'https://aws.amazon.com/lambda/'
+      - functionDuration1Sec
       - functionErrors
-      - type: apiGateway4XXErrors
-        enabled: true
+      - apiGateway4XXErrors
       - apiGateway5XXErrors
-      - type: sqsDlqVisibleMessages
-        filter: '-dlq'
-      - type: dynamoDbSystemErrors
-        enabled: false
+      - sqsDlqVisibleMessages
+      - dynamoDbSystemErrors
+      - dynamoDbUserErrors
 
 functions:
   under-newrelic-mntrng:
     handler: index.endpoint
     alerts:
       - name: functionErrors
-        enabled: true
-        title: 'Dummy Errors'
-        runbookURL: 'https://aws.amazon.com/lambda/'
+        enabled: false
       - functionThrottles
 ```
 
@@ -107,7 +100,6 @@ Examples of generated CF:
 - `policyServiceToken` - arn of lambda managing policy (required)
 - `infrastructureConditionServiceToken` - arn of lambda managing infrastructure conditions (required)
 - `violationCloseTimer` - after what time alert conditions should be force-closed - 24h by default, pass `0` to turn off auto closing
-- `incidentPreference` - possible values: 'PER_CONDITION', 'PER_CONDITION_AND_TARGET', 'PER_POLICY'. If you don't specify this field, it will be set to 'PER_POLICY'
 - `alerts` - list of required alerts
 
 ## List of preconfigured metrics 

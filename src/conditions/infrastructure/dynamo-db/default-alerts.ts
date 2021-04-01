@@ -1,14 +1,12 @@
-import { DynamoDbAlert } from '../../../constants/alerts'
+import { ApiGatewayAlert, DynamoDbAlert } from '../../../constants/alerts'
 import { Comparison } from '../../../constants/comparison'
-import { namespaceMapping } from '../../../constants/namespace-mapping'
 import { TimeFunction } from '../../../constants/time-function'
 
 const DEFAULT_DURATION = 5
 const DEFAULT_CRITICAL_VALUE = 3
 
-const defaultDynamoDBAlerts = {
+const defaultAlerts = {
   [DynamoDbAlert.BATCH_GET_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.batchGetSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -18,7 +16,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.BATCH_WRITE_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.batchWriteSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -28,7 +25,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.DELETE_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.deleteSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -38,7 +34,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.GET_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.getSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -48,7 +43,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.PUT_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.putSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -58,7 +52,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.QUERY_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.querySystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -68,7 +61,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.SCAN_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.scanSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -78,7 +70,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.UPDATE_SYSTEM_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.updateSystemErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -88,7 +79,6 @@ const defaultDynamoDBAlerts = {
     }
   },
   [DynamoDbAlert.USER_ERRORS]: {
-    ...namespaceMapping['AWS::DynamoDB::Table'],
     selectValue: 'provider.userErrors.Sum',
     comparison: Comparison.ABOVE,
     criticalThreshold: {
@@ -99,4 +89,4 @@ const defaultDynamoDBAlerts = {
   }
 }
 
-export default defaultDynamoDBAlerts
+export default defaultAlerts

@@ -24,10 +24,3 @@ export enum DynamoDbAlert {
   UPDATE_SYSTEM_ERRORS = 'dynamoDbUpdateSystemErrors',
   USER_ERRORS = 'dynamoDbUserErrors'
 }
-
-export const defaultAlertTypes = [
-  ...Object.values(FunctionAlert),
-  ...Object.values(DynamoDbAlert),
-  ...Object.values(ApiGatewayAlert),
-  ...Object.values(SqsAlert)
-]
