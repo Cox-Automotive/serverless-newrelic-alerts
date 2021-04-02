@@ -75,13 +75,17 @@ describe('Newrelic Alert Plugin', () => {
   })
 
   describe('getInfrastructureConditionCloudFormation', () => {
-    it('should generate valid infrastructure condition', () => {
+    it('should throw error with invalid infrastructure conditions', () => {
       const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-      const infrastructureCondition = plugin.getInfrastructureConditionCloudFormation(
-        FunctionAlert.THROTTLES,
-        ['fn-1', 'fn-2']
-      )
-      expect(infrastructureCondition).toMatchSnapshot()
+
+      try {
+        const infrastructureCondition = plugin.getInfrastructureConditionCloudFormation(
+          FunctionAlert.THROTTLES,
+          ['fn-1', 'fn-2']
+        )
+      } catch (error) {
+        expect(error).toHaveProperty('message', 'Unknown alert')
+      }
     })
   })
 
@@ -413,7 +417,7 @@ describe('Newrelic Alert Plugin', () => {
         {
           enabled: true,
           resources: [],
-          title: 'TestService TEST - Function Throttles',
+          title: 'Function Throttles',
           type: FunctionAlert.THROTTLES,
           violationCloseTimer: 24
         }

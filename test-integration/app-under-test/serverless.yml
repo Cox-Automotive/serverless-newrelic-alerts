@@ -6,8 +6,10 @@ plugins:
 custom:
   newrelic:
     incidentPreference: 'PER_CONDITION'
-    policyServiceToken: arn:aws:lambda:us-east-1:577152972443:function:infrastructure-new-relic-alerts-alert-policy-dev
-    infrastructureConditionServiceToken: arn:aws:lambda:us-east-1:577152972443:function:infrastructure-new-relic-alerts-infrastructure-alert-dev
+    policyServiceToken: arn:aws:test-infrastructure_condition_service_token 
+    #arn:aws:lambda:us-east-1:577152972443:function:infrastructure-new-relic-alerts-alert-policy-dev
+    infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
+    #arn:aws:lambda:us-east-1:577152972443:function:infrastructure-new-relic-alerts-infrastructure-alert-dev
     violationCloseTimer: 24
     definitions:
       customAlert1:

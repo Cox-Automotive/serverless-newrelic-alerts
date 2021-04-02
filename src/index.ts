@@ -83,7 +83,7 @@ class NewRelicPlugin implements Plugin {
         Type: 'Custom::NewRelicInfrastructureCondition',
         Properties: {
           ServiceToken: this.infrastructureConditionServiceToken,
-          ...getInfrastructureCondition(alert, this.policyName)
+          ...getInfrastructureCondition(alert, this.serviceName, this.policyName)
         }
       }
     }
@@ -104,8 +104,8 @@ class NewRelicPlugin implements Plugin {
           this.createAlert(
             alert,
             alertType,
-            getAlertTitle(this.serviceName, alert, `{functionName} - {alertTitle}`),
-            [functionName]
+            getAlertTitle(alert, `${functionName} - ${alertType}`),
+            [name]
           )
         )
       })
@@ -115,11 +115,17 @@ class NewRelicPlugin implements Plugin {
   }
 
   getGlobalFunctionAlerts(localFunctionAlerts) {
-    const functions = this.serverless.service.getAllFunctions() || []
+    const functions: string[] = this.serverless.service.getAllFunctions() || []
+    const resources: string[] = []
     const globalAlertList = this.globalAlerts.filter(alert =>
       isAlertOfType(alert.type, FunctionAlert)
     )
     const globalFunctionAlerts: Alert[] = []
+
+    functions.forEach(lambdaFunction => {
+      const { name } = this.serverless.service.getFunction(lambdaFunction)
+      resources.push(name)
+    })
 
     globalAlertList.forEach(globalAlert => {
       let filteredResources = []
@@ -132,7 +138,7 @@ class NewRelicPlugin implements Plugin {
 
       globalFunctionAlerts.push({
         ...globalAlert,
-        resources: functions.filter(function(elem) {
+        resources: resources.filter(function(elem) {
           return this.indexOf(elem) < 0
         }, filteredResources)
       })
@@ -252,12 +258,7 @@ class NewRelicPlugin implements Plugin {
 
         alertTypes.forEach(alertMetric => {
           globalAlerts.push(
-            this.createAlert(
-              alert,
-              alertMetric,
-              getAlertTitle(this.serviceName, alert, alertMetric),
-              []
-            )
+            this.createAlert(alert, alertMetric, getAlertTitle(alert, alertMetric), [])
           )
         })
       } else {

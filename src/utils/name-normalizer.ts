@@ -7,5 +7,5 @@ export function getNormalizedPolicyName(policyName: string) {
 }
 
 export const getNormalizedInfrastructureConditionName = (conditionName: string) => {
-  return `${getNormalizedName(conditionName)}`
+  return `${getNormalizedName(conditionName)}InfrastructureCondition`
 }

@@ -43,7 +43,7 @@ functions:
   under-newrelic-mntrng:
     handler: index.endpoint
     alerts:
-      - name: functionErrors
+      - type: functionErrors
         enabled: true
         title: 'Dummy Errors'
         runbookURL: 'https://aws.amazon.com/lambda/'
@@ -108,7 +108,11 @@ Examples of generated CF:
 - `infrastructureConditionServiceToken` - arn of lambda managing infrastructure conditions (required)
 - `violationCloseTimer` - after what time alert conditions should be force-closed - 24h by default, pass `0` to turn off auto closing
 - `incidentPreference` - possible values: 'PER_CONDITION', 'PER_CONDITION_AND_TARGET', 'PER_POLICY'. If you don't specify this field, it will be set to 'PER_POLICY'
-- `alerts` - list of required alerts
+- `alerts` - list of required alerts. It can be list of existing alerts aliases or each alert can contain advanced configuration: 
+    - type - alias name to existing alert type (e.x. functionThrottles)
+    - enabled - boolean param which indicates whether it triggers alams or not
+    - runbookURL - URL for your runbook instructions
+    - title - name of NewRelic alert 
 
 ## List of preconfigured metrics 
 

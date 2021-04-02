@@ -16,9 +16,8 @@ export const isValidType = alertType => {
   return defaultAlertTypes.includes(alertType) || isAlertOfType(alertType, AlertsSet)
 }
 
-export const getAlertTitle = (serviceName, alertConfig, alertDescription) => {
-  const alertTitle =
-    !isString(alertConfig) && alertConfig.title ? alertConfig.title : startCase(alertDescription)
-
-  return `${serviceName} - ${alertTitle}`
+export const getAlertTitle = (alertConfig, alertDescription) => {
+  return !isString(alertConfig) && alertConfig.title
+    ? alertConfig.title
+    : startCase(alertDescription)
 }

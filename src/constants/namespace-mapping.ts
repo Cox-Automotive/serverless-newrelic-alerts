@@ -6,7 +6,7 @@ export const namespaceMapping = {
   'AWS::Lambda::Function': {
     propertyName: 'FunctionName',
     filterTypeName: 'displayName',
-    integrationType: IntegrationProvider.LAMBDA_FUNCTION,
+    integrationProvider: IntegrationProvider.LAMBDA_FUNCTION,
     eventType: EventType.SERVERLESS_SAMPLE
   },
   'AWS::ApiGateway::RestApi': {
@@ -18,15 +18,15 @@ export const namespaceMapping = {
   'AWS::SQS::Queue': {
     propertyName: 'QueueName',
     filterTypeName: 'queueName',
-    integrationType: IntegrationProvider.SQS_QUEUE,
+    integrationProvider: IntegrationProvider.SQS_QUEUE,
     eventType: EventType.QUEUE_SAMPLE,
     alertType: SqsAlert
   },
   'AWS::DynamoDB::Table': {
     propertyName: 'TableName',
-    filterTypeName: 'table',
+    filterTypeName: 'tableName',
     alertType: DynamoDbAlert,
-    integrationType: IntegrationProvider.DYNAMO_DB_TABLE,
+    integrationProvider: IntegrationProvider.DYNAMO_DB_TABLE,
     eventType: EventType.DATASTORE_SAMPLE
   }
 }
