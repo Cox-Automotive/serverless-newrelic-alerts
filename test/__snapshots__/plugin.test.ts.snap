@@ -26,16 +26,18 @@ Object {
             },
           ],
         },
+        "integration_provider": undefined,
         "name": "TestService TEST - Api Gateway 4 XX Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.4xxError.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -64,16 +66,18 @@ Object {
             },
           ],
         },
+        "integration_provider": undefined,
         "name": "TestService TEST - Api Gateway 5 XX Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.5xxError.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -110,14 +114,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Batch Get System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.batchGetSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -149,14 +154,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Batch Write System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.batchWriteSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -188,14 +194,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Delete System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.deleteSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -227,14 +234,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Get System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.getSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -266,14 +274,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Put System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.putSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -305,14 +314,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Query System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.querySystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -344,14 +354,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Scan System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.scanSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -383,14 +394,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db Update System Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.updateSystemErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -422,14 +434,15 @@ Object {
         "integration_provider": "DynamoDbTable",
         "name": "TestService TEST - Dynamo Db User Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.userErrors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -466,14 +479,15 @@ Object {
         "integration_provider": "LambdaFunction",
         "name": "TestService TEST - Function Duration 1 Sec",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.duration.Maximum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -505,14 +519,15 @@ Object {
         "integration_provider": "LambdaFunction",
         "name": "TestService TEST - Function Errors",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.errors.Sum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -544,14 +559,15 @@ Object {
         "integration_provider": "LambdaFunction",
         "name": "TestService TEST - Function Throttles",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.throttles.Maximum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -561,35 +577,7 @@ Object {
 
 exports[`Newrelic Alert Plugin getFunctionAlertsCloudFormation should generate local defined alerts functions 1`] = `
 Object {
-  "and": Array [
-    Object {
-      "in": Object {
-        "displayName": Array [
-          "test-service-test-function-2",
-        ],
-      },
-    },
-  ],
-}
-`;
-
-exports[`Newrelic Alert Plugin getFunctionAlertsCloudFormation shouldn't generate global alerts for function if alert disabled locally 1`] = `
-Object {
-  "and": Array [
-    Object {
-      "in": Object {
-        "displayName": Array [
-          "test-service-test-function",
-        ],
-      },
-    },
-  ],
-}
-`;
-
-exports[`Newrelic Alert Plugin getInfrastructureConditionCloudFormation should generate valid infrastructure condition 1`] = `
-Object {
-  "FunctionThrottlesInfrastructureCondition": Object {
+  "TestFunction2FunctionDuration1SecInfrastructureCondition": Object {
     "Properties": Object {
       "ServiceToken": "infrastructure-condition-token",
       "data": Object {
@@ -597,7 +585,7 @@ Object {
         "critical_threshold": Object {
           "duration_minutes": 5,
           "time_function": "all",
-          "value": 3,
+          "value": 1000,
         },
         "enabled": true,
         "event_type": "ServerlessSample",
@@ -606,24 +594,24 @@ Object {
             Object {
               "in": Object {
                 "displayName": Array [
-                  "fn-1",
-                  "fn-2",
+                  "test-service-test-function-2",
                 ],
               },
             },
           ],
         },
         "integration_provider": "LambdaFunction",
-        "name": "TestService TEST - Function Throttles",
+        "name": "TestService TEST - Test Function 2 Function Duration 1 Sec",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
-        "select_value": "provider.throttles.Maximum",
+        "runbook_url": undefined,
+        "select_value": "provider.duration.Maximum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",
@@ -633,11 +621,11 @@ Object {
 
 exports[`Newrelic Alert Plugin getPolicyCloudFormation should generate valid policy 1`] = `
 Object {
-  "TestServiceNewRelicPolicy": Object {
+  "TestServiceTestNewRelicPolicy": Object {
     "Properties": Object {
       "ServiceToken": "policy-token",
       "policy": Object {
-        "incident_preference": "PER_POLICY",
+        "incident_preference": undefined,
         "name": "TestService TEST",
       },
     },
@@ -674,14 +662,15 @@ Object {
         "integration_provider": "SqsQueue",
         "name": "TestService TEST - Sqs Dlq Visible Messages",
         "policy_id": Object {
-          "Ref": "TestServiceNewRelicPolicy",
+          "Ref": "TestServiceTestNewRelicPolicy",
         },
+        "runbook_url": undefined,
         "select_value": "provider.approximateNumberOfMessagesVisible.Maximum",
         "type": "infra_metric",
-        "violation_close_timer": undefined,
+        "violation_close_timer": 24,
       },
       "policy_id": Object {
-        "Ref": "TestServiceNewRelicPolicy",
+        "Ref": "TestServiceTestNewRelicPolicy",
       },
     },
     "Type": "Custom::NewRelicInfrastructureCondition",

@@ -1,51 +1,91 @@
 {
   "Resources": {
-    "PluginTestNewRelicPolicy": {
+    "PluginTestTestNewRelicPolicy": {
       "Type": "Custom::NewRelicPolicy",
       "Properties": {
         "ServiceToken": "arn:aws:test-policy_service_token",
         "policy": {
           "name": "PluginTest TEST",
-          "incident_preference": "PER_POLICY"
+          "incident_preference": "PER_CONDITION"
         }
       }
     },
-    "FunctionThrottlesInfrastructureCondition": {
+    "DummyThrottlesInfrastructureCondition": {
       "Type": "Custom::NewRelicInfrastructureCondition",
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Function Throttles",
+          "name": "PluginTest TEST - Dummy Throttles",
           "enabled": true,
           "filter": {
             "and": [
               {
                 "in": {
                   "displayName": [
-                    "plugin-test-test-under-newrelic-mntrng",
                     "plugin-test-test-dummy-lambda"
                   ]
                 }
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "ServerlessSample",
-          "select_value": "provider.throttles.Maximum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.throttles.Maximum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "LambdaFunction"
+          "integration_provider": "LambdaFunction",
+          "event_type": "ServerlessSample",
+          "runbook_url": "https://aws.amazon.com/lambda/"
+        }
+      }
+    },
+    "Duration1SecInfrastructureCondition": {
+      "Type": "Custom::NewRelicInfrastructureCondition",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
+        "policy_id": {
+          "Ref": "PluginTestTestNewRelicPolicy"
+        },
+        "data": {
+          "type": "infra_metric",
+          "name": "PluginTest TEST - Duration 1 sec",
+          "enabled": true,
+          "filter": {
+            "and": [
+              {
+                "in": {
+                  "displayName": [
+                    "plugin-test-test-ga-lambda",
+                    "plugin-test-test-dummy-lambda"
+                  ]
+                }
+              }
+            ]
+          },
+          "policy_id": {
+            "Ref": "PluginTestTestNewRelicPolicy"
+          },
+          "violation_close_timer": 24,
+          "comparison": "above",
+          "select_value": "provider.duration.Maximum",
+          "critical_threshold": {
+            "value": 1000,
+            "duration_minutes": 5,
+            "time_function": "all"
+          },
+          "integration_provider": "LambdaFunction",
+          "event_type": "ServerlessSample",
+          "runbook_url": "https://aws.amazon.com/lambda/"
         }
       }
     },
@@ -54,7 +94,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -65,66 +105,26 @@
               {
                 "in": {
                   "displayName": [
-                    "plugin-test-test-under-newrelic-mntrng",
-                    "plugin-test-test-dummy-lambda",
+                    "plugin-test-test-ga-lambda",
                     "plugin-test-test-test-lambda"
                   ]
                 }
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "ServerlessSample",
-          "select_value": "provider.errors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.errors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "LambdaFunction"
-        }
-      }
-    },
-    "FunctionDuration1SecInfrastructureCondition": {
-      "Type": "Custom::NewRelicInfrastructureCondition",
-      "Properties": {
-        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
-        "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
-        },
-        "data": {
-          "type": "infra_metric",
-          "name": "PluginTest TEST - Function Duration 1 Sec",
-          "enabled": true,
-          "filter": {
-            "and": [
-              {
-                "in": {
-                  "displayName": [
-                    "plugin-test-test-under-newrelic-mntrng",
-                    "plugin-test-test-dummy-lambda"
-                  ]
-                }
-              }
-            ]
-          },
-          "violation_close_timer": 24,
-          "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
-          },
-          "event_type": "ServerlessSample",
-          "select_value": "provider.duration.Maximum",
-          "comparison": "above",
-          "critical_threshold": {
-            "value": 1000,
-            "duration_minutes": 5,
-            "time_function": "all"
-          },
-          "integration_provider": "LambdaFunction"
+          "integration_provider": "LambdaFunction",
+          "event_type": "ServerlessSample"
         }
       }
     },
@@ -133,7 +133,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -150,18 +150,18 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "ApiGatewaySample",
-          "select_value": "provider.4xxError.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.4xxError.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
-          }
+          },
+          "event_type": "ApiGatewaySample"
         }
       }
     },
@@ -170,7 +170,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -187,18 +187,18 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "ApiGatewaySample",
-          "select_value": "provider.5xxError.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.5xxError.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
-          }
+          },
+          "event_type": "ApiGatewaySample"
         }
       }
     },
@@ -207,7 +207,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -224,19 +224,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "QueueSample",
-          "select_value": "provider.approximateNumberOfMessagesVisible.Maximum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.approximateNumberOfMessagesVisible.Maximum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "SqsQueue"
+          "integration_provider": "SqsQueue",
+          "event_type": "QueueSample"
         }
       }
     },
@@ -245,12 +245,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Batch Get System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -262,19 +262,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.batchGetSystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.batchGetSystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -283,12 +283,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Batch Write System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -300,19 +300,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.batchWriteSystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.batchWriteSystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -321,12 +321,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Delete System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -338,19 +338,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.deleteSystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.deleteSystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -359,12 +359,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Get System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -376,19 +376,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.getSystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.getSystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -397,12 +397,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Put System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -414,19 +414,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.putSystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.putSystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -435,12 +435,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Query System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -452,19 +452,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.querySystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.querySystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -473,12 +473,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Scan System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -490,19 +490,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.scanSystemErrors.Sum",
+          "violation_close_timer": 24,
           "comparison": "above",
+          "select_value": "provider.scanSystemErrors.Sum",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     },
@@ -511,12 +511,12 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
+          "Ref": "PluginTestTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
           "name": "PluginTest TEST - Dynamo Db Update System Errors",
-          "enabled": true,
+          "enabled": false,
           "filter": {
             "and": [
               {
@@ -528,57 +528,19 @@
               }
             ]
           },
-          "violation_close_timer": 24,
           "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
+            "Ref": "PluginTestTestNewRelicPolicy"
           },
-          "event_type": "DatastoreSample",
+          "violation_close_timer": 24,
+          "comparison": "above",
           "select_value": "provider.updateSystemErrors.Sum",
-          "comparison": "above",
           "critical_threshold": {
             "value": 3,
             "duration_minutes": 5,
             "time_function": "all"
           },
-          "integration_provider": "DynamoDbTable"
-        }
-      }
-    },
-    "DynamoDbUserErrorsInfrastructureCondition": {
-      "Type": "Custom::NewRelicInfrastructureCondition",
-      "Properties": {
-        "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
-        "policy_id": {
-          "Ref": "PluginTestNewRelicPolicy"
-        },
-        "data": {
-          "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db User Errors",
-          "enabled": true,
-          "filter": {
-            "and": [
-              {
-                "in": {
-                  "tableName": [
-                    "test-table"
-                  ]
-                }
-              }
-            ]
-          },
-          "violation_close_timer": 24,
-          "policy_id": {
-            "Ref": "PluginTestNewRelicPolicy"
-          },
-          "event_type": "DatastoreSample",
-          "select_value": "provider.userErrors.Sum",
-          "comparison": "above",
-          "critical_threshold": {
-            "value": 3,
-            "duration_minutes": 5,
-            "time_function": "all"
-          },
-          "integration_provider": "DynamoDbTable"
+          "integration_provider": "DynamoDbTable",
+          "event_type": "DatastoreSample"
         }
       }
     }

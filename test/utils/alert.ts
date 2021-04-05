@@ -1,4 +1,4 @@
-import isAlertOfType from '../../src/utils/is-alert-of-type'
+import { isAlertOfType } from '../../src/utils/alert'
 import { ApiGatewayAlert, FunctionAlert } from '../../src/constants/alerts'
 import { AlertsSet } from '../../src/constants/alerts-set'
 

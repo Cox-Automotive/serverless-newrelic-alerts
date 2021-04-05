@@ -21,25 +21,32 @@ plugins:
   - serverless-newrelic-alerts
 
 custom:
-  newrelicAlerts:
+  newrelic:
+    incidentPreference: 'PER_CONDITION'
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
     violationCloseTimer: 24
     alerts:
-      - functionDuration1Sec
+      - type: functionDuration1Sec
+        title: 'Duration 1 sec'
+        runbookURL: 'https://aws.amazon.com/lambda/'
       - functionErrors
-      - apiGateway4XXErrors
+      - type: apiGateway4XXErrors
+        enabled: true
       - apiGateway5XXErrors
-      - sqsDlqVisibleMessages
-      - dynamoDbSystemErrors
-      - dynamoDbUserErrors
+      - type: sqsDlqVisibleMessages
+        filter: '-dlq'
+      - type: dynamoDbSystemErrors
+        enabled: false
 
 functions:
   under-newrelic-mntrng:
     handler: index.endpoint
     alerts:
-      - name: functionErrors
-        enabled: false
+      - type: functionErrors
+        enabled: true
+        title: 'Dummy Errors'
+        runbookURL: 'https://aws.amazon.com/lambda/'
       - functionThrottles
 ```
 
@@ -100,7 +107,12 @@ Examples of generated CF:
 - `policyServiceToken` - arn of lambda managing policy (required)
 - `infrastructureConditionServiceToken` - arn of lambda managing infrastructure conditions (required)
 - `violationCloseTimer` - after what time alert conditions should be force-closed - 24h by default, pass `0` to turn off auto closing
-- `alerts` - list of required alerts
+- `incidentPreference` - possible values: 'PER_CONDITION', 'PER_CONDITION_AND_TARGET', 'PER_POLICY'. If you don't specify this field, it will be set to 'PER_POLICY'
+- `alerts` - list of required alerts. It can be list of existing alerts aliases or each alert can contain advanced configuration: 
+    - type - alias name to existing alert type (e.x. functionThrottles)
+    - enabled - boolean param which indicates whether it triggers alams or not
+    - runbookURL - URL for your runbook instructions
+    - title - name of NewRelic alert 
 
 ## List of preconfigured metrics 
 

@@ -4,18 +4,35 @@ plugins:
   - serverless-newrelic-alerts
 
 custom:
-  newrelicAlerts:
+  newrelic:
+    incidentPreference: 'PER_CONDITION'
     policyServiceToken: arn:aws:test-policy_service_token
-    infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
+    infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token 
     violationCloseTimer: 24
+    definitions:
+      customAlert1:
+        namespace: 'AWS::Lambda::Function'
+        title: 'Custom Alert 1'
+        runbookURL: 'https://aws.amazon.com/lambda/'
+        metric: 'provider.4xxError.Sum'
+        violationCloseTimer: 4
+        criticalThreshold:
+          value: 5
+          duration: 300
+        comparison: above
     alerts:
-      - functionDuration1Sec
+      - type: functionDuration1Sec
+        title: 'Duration 1 sec'
+        runbookURL: 'https://aws.amazon.com/lambda/'
       - functionErrors
-      - apiGateway4XXErrors
+      - type: apiGateway4XXErrors
+        enabled: true
       - apiGateway5XXErrors
-      - sqsDlqVisibleMessages
-      - dynamoDbSystemErrors
-      - dynamoDbUserErrors
+      - type: sqsDlqVisibleMessages
+        filter: '-dlq'
+      - type: dynamoDbSystemErrors
+        enabled: false
+     # - dynamoDbUserErrors
 
 provider:
   name: aws
@@ -23,7 +40,7 @@ provider:
   stage: test
 
 functions:
-  under-newrelic-mntrng:
+  ga-lambda:
     handler: index.endpoint
     events:
       - http:
@@ -35,14 +52,15 @@ functions:
   dummy-lambda:
     handler: index.endpoint
     alerts:
-      - name: functionThrottles
-        enabled: true
+      - type: functionThrottles
+        title: 'Dummy Throttles'
+        runbookURL: 'https://aws.amazon.com/lambda/'
       - functionErrors
 
   test-lambda:
     handler: index.endpoint
     alerts:
-      - name: functionDuration1Sec
+      - type: functionDuration1Sec
         enabled: false
 
 resources:
