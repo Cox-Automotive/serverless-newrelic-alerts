@@ -1,5 +1,15 @@
 {
   "Resources": {
+    "PluginTestTestNewRelicPolicy": {
+      "Type": "Custom::NewRelicPolicy",
+      "Properties": {
+        "ServiceToken": "arn:aws:test-policy_service_token",
+        "policy": {
+          "name": "PluginTest TEST",
+          "incident_preference": "PER_CONDITION"
+        }
+      }
+    },
     "DummyThrottlesInfrastructureCondition": {
       "Type": "Custom::NewRelicInfrastructureCondition",
       "Properties": {
