@@ -40,7 +40,7 @@
   },
   "release": {
     "branches": [
-      "fature/msg"
+      "main"
     ],
     "plugins": [
       [
