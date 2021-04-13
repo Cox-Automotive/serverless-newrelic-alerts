@@ -41,20 +41,6 @@
   "release": {
     "branches": [
       "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "releaseRules": [
-            {
-              "type": false,
-              "release": "patch"
-            }
-          ]
-        }
-      ]
     ]
   },
   "lint-staged": {
