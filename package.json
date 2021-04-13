@@ -49,7 +49,7 @@
           "preset": "angular",
           "releaseRules": [
             {
-              "scope": "*",
+              "scope": false,
               "release": "patch"
             }
           ]
