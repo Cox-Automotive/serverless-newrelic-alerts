@@ -40,7 +40,14 @@
   },
   "release": {
     "branches": [
-      "main"
+      "fature/msg"
+    ],
+    "plugins": [
+      ["@semantic-release/commit-analyzer", {
+        "releaseRules": [
+          {"scope": "*", "release": "patch"}
+        ]
+      }],
     ]
   },
   "lint-staged": {
