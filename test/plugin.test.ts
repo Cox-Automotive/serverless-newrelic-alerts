@@ -69,6 +69,7 @@ describe('Newrelic Alert Plugin', () => {
   describe('getPolicyCloudFormation', () => {
     it('should generate valid policy', () => {
       const plugin = new NewRelicPlugin(getServerless(minimalConfig))
+      plugin.configure()
       const policy = plugin.getPolicyCloudFormation()
       expect(policy).toMatchSnapshot()
     })
@@ -77,7 +78,7 @@ describe('Newrelic Alert Plugin', () => {
   describe('getInfrastructureConditionCloudFormation', () => {
     it('should throw error with invalid infrastructure conditions', () => {
       const plugin = new NewRelicPlugin(getServerless(minimalConfig))
-
+      plugin.configure()
       try {
         const infrastructureCondition = plugin.getInfrastructureConditionCloudFormation(
           FunctionAlert.THROTTLES,
@@ -111,6 +112,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getFunctionAlertsCloudFormation()
       expect(cf).toMatchSnapshot()
     })
@@ -136,6 +139,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getFunctionAlertsCloudFormation()
       expect(cf).toMatchSnapshot()
     })
@@ -147,6 +152,8 @@ describe('Newrelic Alert Plugin', () => {
           alerts: [...Object.values(FunctionAlert), ...Object.values(ApiGatewayAlert)]
         })
       )
+
+      plugin.configure()
       const cf = plugin.getFunctionAlertsCloudFormation()
       expect(cf).toEqual({})
     })
@@ -168,6 +175,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getFunctionAlertsCloudFormation()
       expect(cf).toEqual({})
     })
@@ -199,6 +208,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::ApiGateway::RestApi')
       expect(cf).toMatchSnapshot()
     })
@@ -210,6 +221,8 @@ describe('Newrelic Alert Plugin', () => {
           alerts: [...Object.values(FunctionAlert), ...Object.values(ApiGatewayAlert)]
         })
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::ApiGateway::RestApi')
       expect(cf).toEqual({})
     })
@@ -233,6 +246,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::ApiGateway::RestApi')
       expect(cf).toEqual({})
     })
@@ -270,6 +285,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::SQS::Queue')
       expect(cf).toMatchSnapshot()
     })
@@ -298,6 +315,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::SQS::Queue')
       expect(cf).toEqual({})
     })
@@ -321,6 +340,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::SQS::Queue')
       expect(cf).toEqual({})
     })
@@ -352,6 +373,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::DynamoDB::Table')
       expect(cf).toMatchSnapshot()
     })
@@ -363,6 +386,8 @@ describe('Newrelic Alert Plugin', () => {
           alerts: [...Object.values(DynamoDbAlert), ...Object.values(ApiGatewayAlert)]
         })
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::DynamoDB::Table')
       expect(cf).toEqual({})
     })
@@ -386,6 +411,8 @@ describe('Newrelic Alert Plugin', () => {
           }
         )
       )
+
+      plugin.configure()
       const cf = plugin.getAlertsCloudFormation('AWS::DynamoDB::Table')
       expect(cf).toEqual({})
     })

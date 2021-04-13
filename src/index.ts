@@ -30,11 +30,6 @@ class NewRelicPlugin implements Plugin {
 
   constructor(serverless: Serverless) {
     this.serverless = serverless
-    this.awsProvider = this.serverless.getProvider('aws')
-    this.serviceName = `${getNormalizedName(this.serverless.service.getServiceName())} ${upperCase(
-      this.awsProvider.getStage()
-    )}`
-    this.policyName = getNormalizedPolicyName(this.serviceName)
 
     if (this.serverless.service.custom && this.serverless.service.custom.newrelic) {
       const {
@@ -269,7 +264,17 @@ class NewRelicPlugin implements Plugin {
     return globalAlerts
   }
 
+  configure() {
+    // access to the configuration vars should be done only in the hooks, as it may not be resolved earlier
+    this.awsProvider = this.serverless.getProvider('aws')
+    this.serviceName = `${getNormalizedName(this.serverless.service.getServiceName())} ${upperCase(
+      this.awsProvider.getStage()
+    )}`
+    this.policyName = getNormalizedPolicyName(this.serviceName)
+  }
+
   compile() {
+    this.configure()
     Object.assign(this.serverless.service.provider.compiledCloudFormationTemplate.Resources, {
       ...this.getPolicyCloudFormation(
         this.serverless.service.custom.newrelic.incidentPreference || 'PER_POLICY'
