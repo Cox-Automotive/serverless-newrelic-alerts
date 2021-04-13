@@ -5,6 +5,18 @@ defaults: &defaults
     - image: circleci/node:14.15.1
 
 jobs:
+  lint_commit_message:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Define environment variable with lastest commit's message
+          command: |
+            echo 'export COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Lint commit message
+          command: echo "$COMMIT_MESSAGE" | npx commitlint
   test:
     <<: *defaults
     steps:
@@ -16,7 +28,8 @@ jobs:
           command: npm run test:prod
       - persist_to_workspace:
           root: .
-          paths: .
+          paths:
+            - .
   deploy:
     <<: *defaults
     steps:
@@ -33,9 +46,11 @@ workflows:
   version: 2
   test-n-deploy:
     jobs:
+      - lint_commit_message
       - test
       - deploy:
           requires:
+            - lint_commit_message
             - test
           filters:
             branches:

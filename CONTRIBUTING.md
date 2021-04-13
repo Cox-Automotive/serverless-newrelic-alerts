@@ -11,7 +11,8 @@ These steps will guide you through contributing to this project:
       		git clone https://github.com/YOUR-USERNAME/REPOSITORY-NAME
       		npm install
 
-Make and commit your changes. Make sure the commands npm run build and npm run test:prod are working.
+Make and commit your changes. Make sure the commands npm run build and npm run test:prod are working.  
+Make sure latest commit follows https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit
 
 Finally send a
 [GitHub Pull Request](https://github.com/Cox-Automotive/serverless-newrelic-alerts/compare?expand=1)
