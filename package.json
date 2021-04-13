@@ -43,11 +43,18 @@
       "fature/msg"
     ],
     "plugins": [
-      ["@semantic-release/commit-analyzer", {
-        "releaseRules": [
-          {"scope": "*", "release": "patch"}
-        ]
-      }],
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {
+              "scope": "*",
+              "release": "patch"
+            }
+          ]
+        }
+      ]
     ]
   },
   "lint-staged": {
