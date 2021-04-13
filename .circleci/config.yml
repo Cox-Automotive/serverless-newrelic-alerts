@@ -9,6 +9,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run: npm ci
       - run:
           name: Define environment variable with lastest commit's message
           command: |
