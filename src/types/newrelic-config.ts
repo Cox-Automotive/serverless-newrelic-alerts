@@ -3,6 +3,7 @@ import { AlertType } from './alert'
 
 export type NewRelicConfig = {
   policyServiceToken: string
+  customPolicyName: string
   infrastructureConditionServiceToken: string
   incidentPreference?: string
   violationCloseTimer?: number

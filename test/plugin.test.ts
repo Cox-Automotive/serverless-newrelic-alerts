@@ -73,6 +73,14 @@ describe('Newrelic Alert Plugin', () => {
       const policy = plugin.getPolicyCloudFormation()
       expect(policy).toMatchSnapshot()
     })
+
+    it('should generate valid policy with custom name', () => {
+      const customPolicyName = 'Custom policy name'
+      const plugin = new NewRelicPlugin(getServerless({ ...minimalConfig, customPolicyName }))
+      plugin.configure()
+      const policy = plugin.getPolicyCloudFormation()
+      expect(policy).toMatchSnapshot()
+    })
   })
 
   describe('getInfrastructureConditionCloudFormation', () => {

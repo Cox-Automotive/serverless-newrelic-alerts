@@ -22,6 +22,7 @@ plugins:
 
 custom:
   newrelic:
+    policyName: Custom policy name
     incidentPreference: 'PER_CONDITION'
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
