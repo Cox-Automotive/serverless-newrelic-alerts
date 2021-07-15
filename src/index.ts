@@ -22,6 +22,7 @@ class NewRelicPlugin implements Plugin {
   hooks: Plugin.Hooks
   serviceName: string
   policyName: string
+  customPolicyName: string
   policyServiceToken: string
   infrastructureConditionServiceToken: string
   violationCloseTimer?: number
@@ -36,7 +37,8 @@ class NewRelicPlugin implements Plugin {
         policyServiceToken,
         infrastructureConditionServiceToken,
         violationCloseTimer,
-        alerts = []
+        alerts = [],
+        customPolicyName
       }: NewRelicConfig = this.serverless.service.custom.newrelic
       if (!policyServiceToken || !infrastructureConditionServiceToken) {
         throw Error(
@@ -52,6 +54,7 @@ class NewRelicPlugin implements Plugin {
       this.infrastructureConditionServiceToken = infrastructureConditionServiceToken
       this.violationCloseTimer = violationCloseTimer
       this.globalAlerts = this.getGlobalAlerts(alerts)
+      this.customPolicyName = customPolicyName
     } else {
       this.hooks = {}
     }
@@ -64,7 +67,7 @@ class NewRelicPlugin implements Plugin {
         Properties: {
           ServiceToken: this.policyServiceToken,
           policy: {
-            name: this.serviceName,
+            name: this.customPolicyName || this.serviceName,
             incident_preference: incidentPreference
           }
         }
@@ -270,7 +273,9 @@ class NewRelicPlugin implements Plugin {
     this.serviceName = `${getNormalizedName(this.serverless.service.getServiceName())} ${upperCase(
       this.awsProvider.getStage()
     )}`
-    this.policyName = getNormalizedPolicyName(this.serviceName)
+    this.policyName = this.customPolicyName
+      ? getNormalizedPolicyName(this.customPolicyName)
+      : getNormalizedPolicyName(this.serviceName)
   }
 
   compile() {

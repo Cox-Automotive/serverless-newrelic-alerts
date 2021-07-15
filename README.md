@@ -22,6 +22,7 @@ plugins:
 
 custom:
   newrelic:
+    policyName: Custom NR policy name
     incidentPreference: 'PER_CONDITION'
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
@@ -52,7 +53,7 @@ functions:
 
 Examples of generated CF:
 
-- Policy
+- Policy (if policyName isn't provided)
 ```json
 {
   "PluginTestNewRelicPolicy": {
@@ -67,7 +68,21 @@ Examples of generated CF:
   }
 }
 ```
-
+- Policy with custom name
+```json
+{
+  "CustomPolicyNameNewRelicPolicy": {
+    "Type": "Custom::NewRelicPolicy",
+    "Properties": {
+      "ServiceToken": "arn:aws:test-policy_service_token",
+      "policy": {
+        "name": "Custom policy name",
+        "incident_preference": "PER_POLICY"
+      }
+    }
+  }
+}
+```
 - Infrastructure condition
 ```json
 {
@@ -107,6 +122,7 @@ Examples of generated CF:
 - `policyServiceToken` - arn of lambda managing policy (required)
 - `infrastructureConditionServiceToken` - arn of lambda managing infrastructure conditions (required)
 - `violationCloseTimer` - after what time alert conditions should be force-closed - 24h by default, pass `0` to turn off auto closing
+- `policyName` - Custom name for the NewRelic policy if not specified genareted from `serviceName` in the `serverless.yaml` of the target app
 - `incidentPreference` - possible values: 'PER_CONDITION', 'PER_CONDITION_AND_TARGET', 'PER_POLICY'. If you don't specify this field, it will be set to 'PER_POLICY'
 - `alerts` - list of required alerts. It can be list of existing alerts aliases or each alert can contain advanced configuration: 
     - type - alias name to existing alert type (e.x. functionThrottles)

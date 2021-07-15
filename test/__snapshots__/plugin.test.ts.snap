@@ -634,6 +634,21 @@ Object {
 }
 `;
 
+exports[`Newrelic Alert Plugin getPolicyCloudFormation should generate valid policy with custom name 1`] = `
+Object {
+  "CustomPolicyNameNewRelicPolicy": Object {
+    "Properties": Object {
+      "ServiceToken": "policy-token",
+      "policy": Object {
+        "incident_preference": undefined,
+        "name": "Custom policy name",
+      },
+    },
+    "Type": "Custom::NewRelicPolicy",
+  },
+}
+`;
+
 exports[`Newrelic Alert Plugin getSqsAlertsCloudFormation should generate alerts for all dead letter queues 1`] = `
 Object {
   "SqsDlqVisibleMessagesInfrastructureCondition": Object {
