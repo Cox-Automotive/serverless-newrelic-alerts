@@ -22,6 +22,7 @@ class NewRelicPlugin implements Plugin {
   hooks: Plugin.Hooks
   serviceName: string
   policyName: string
+  normalizedPolicyName: string
   customPolicyName: string
   policyServiceToken: string
   infrastructureConditionServiceToken: string
@@ -62,12 +63,12 @@ class NewRelicPlugin implements Plugin {
 
   getPolicyCloudFormation(incidentPreference) {
     return {
-      [this.policyName]: {
+      [this.normalizedPolicyName]: {
         Type: 'Custom::NewRelicPolicy',
         Properties: {
           ServiceToken: this.policyServiceToken,
           policy: {
-            name: this.customPolicyName || this.serviceName,
+            name: this.policyName,
             incident_preference: incidentPreference
           }
         }
@@ -81,7 +82,7 @@ class NewRelicPlugin implements Plugin {
         Type: 'Custom::NewRelicInfrastructureCondition',
         Properties: {
           ServiceToken: this.infrastructureConditionServiceToken,
-          ...getInfrastructureCondition(alert, this.serviceName, this.policyName)
+          ...getInfrastructureCondition(alert, this.serviceName, this.normalizedPolicyName)
         }
       }
     }
@@ -274,8 +275,9 @@ class NewRelicPlugin implements Plugin {
       this.awsProvider.getStage()
     )}`
     this.policyName = this.customPolicyName
-      ? getNormalizedPolicyName(this.customPolicyName)
-      : getNormalizedPolicyName(this.serviceName)
+      ? `${this.customPolicyName} ${upperCase(this.awsProvider.getStage())}`
+      : this.serviceName
+    this.normalizedPolicyName = getNormalizedPolicyName(this.policyName)
   }
 
   compile() {
