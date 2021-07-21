@@ -636,12 +636,12 @@ Object {
 
 exports[`Newrelic Alert Plugin getPolicyCloudFormation should generate valid policy with custom name 1`] = `
 Object {
-  "CustomPolicyNameNewRelicPolicy": Object {
+  "CustomPolicyNameTestNewRelicPolicy": Object {
     "Properties": Object {
       "ServiceToken": "policy-token",
       "policy": Object {
         "incident_preference": undefined,
-        "name": "Custom policy name",
+        "name": "Custom policy name TEST",
       },
     },
     "Type": "Custom::NewRelicPolicy",

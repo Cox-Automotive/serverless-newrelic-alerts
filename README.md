@@ -22,7 +22,7 @@ plugins:
 
 custom:
   newrelic:
-    policyName: Custom NR policy name
+    customPolicyName: Custom NR policy name
     incidentPreference: 'PER_CONDITION'
     policyServiceToken: arn:aws:test-policy_service_token
     infrastructureConditionServiceToken: arn:aws:test-infrastructure_condition_service_token
@@ -53,7 +53,7 @@ functions:
 
 Examples of generated CF:
 
-- Policy (if policyName isn't provided)
+- Policy (if customPolicyName isn't provided)
 ```json
 {
   "PluginTestNewRelicPolicy": {
