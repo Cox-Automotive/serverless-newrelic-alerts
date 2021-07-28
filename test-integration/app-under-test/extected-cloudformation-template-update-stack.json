@@ -1,11 +1,11 @@
 {
   "Resources": {
-    "PluginTestTestNewRelicPolicy": {
+    "CustomNrPolicyNameTestNewRelicPolicy": {
       "Type": "Custom::NewRelicPolicy",
       "Properties": {
         "ServiceToken": "arn:aws:test-policy_service_token",
         "policy": {
-          "name": "PluginTest TEST",
+          "name": "Custom NR policy name TEST",
           "incident_preference": "PER_CONDITION"
         }
       }
@@ -15,7 +15,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -33,7 +33,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -54,7 +54,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -73,7 +73,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -94,7 +94,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -113,7 +113,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -133,7 +133,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -151,7 +151,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -170,7 +170,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -188,7 +188,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -207,7 +207,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -225,7 +225,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -245,7 +245,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -263,7 +263,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -283,7 +283,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -301,7 +301,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -321,7 +321,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -339,7 +339,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -359,7 +359,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -377,7 +377,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -397,7 +397,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -415,7 +415,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -435,7 +435,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -453,7 +453,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -473,7 +473,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -491,7 +491,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
@@ -511,7 +511,7 @@
       "Properties": {
         "ServiceToken": "arn:aws:test-infrastructure_condition_service_token",
         "policy_id": {
-          "Ref": "PluginTestTestNewRelicPolicy"
+          "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
         },
         "data": {
           "type": "infra_metric",
@@ -529,7 +529,7 @@
             ]
           },
           "policy_id": {
-            "Ref": "PluginTestTestNewRelicPolicy"
+            "Ref": "CustomNrPolicyNameTestNewRelicPolicy"
           },
           "violation_close_timer": 24,
           "comparison": "above",
