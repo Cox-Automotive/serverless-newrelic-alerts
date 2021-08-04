@@ -447,6 +447,7 @@ describe('Newrelic Alert Plugin', () => {
 
     it('should filter out with warning all unknown alerts', () => {
       const plugin = new NewRelicPlugin(getServerless(minimalConfig))
+      plugin.configure()
       const alerts = plugin.getGlobalAlerts([FunctionAlert.THROTTLES, 'unknownAlert'])
       expect(alerts).toEqual([
         {

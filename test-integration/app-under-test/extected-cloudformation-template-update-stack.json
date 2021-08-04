@@ -19,7 +19,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dummy Throttles",
+          "name": "Dummy Throttles",
           "enabled": true,
           "filter": {
             "and": [
@@ -58,7 +58,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Duration 1 sec",
+          "name": "Duration 1 sec",
           "enabled": true,
           "filter": {
             "and": [
@@ -98,7 +98,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Function Errors",
+          "name": "Function Errors",
           "enabled": true,
           "filter": {
             "and": [
@@ -137,7 +137,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Api Gateway 4 XX Errors",
+          "name": "Api Gateway 4 XX Errors",
           "enabled": true,
           "filter": {
             "and": [
@@ -174,7 +174,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Api Gateway 5 XX Errors",
+          "name": "Api Gateway 5 XX Errors",
           "enabled": true,
           "filter": {
             "and": [
@@ -211,7 +211,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Sqs Dlq Visible Messages",
+          "name": "Sqs Dlq Visible Messages",
           "enabled": true,
           "filter": {
             "and": [
@@ -249,7 +249,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Batch Get System Errors",
+          "name": "Dynamo Db Batch Get System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -287,7 +287,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Batch Write System Errors",
+          "name": "Dynamo Db Batch Write System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -325,7 +325,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Delete System Errors",
+          "name": "Dynamo Db Delete System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -363,7 +363,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Get System Errors",
+          "name": "Dynamo Db Get System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -401,7 +401,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Put System Errors",
+          "name": "Dynamo Db Put System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -439,7 +439,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Query System Errors",
+          "name": "Dynamo Db Query System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -477,7 +477,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Scan System Errors",
+          "name": "Dynamo Db Scan System Errors",
           "enabled": false,
           "filter": {
             "and": [
@@ -515,7 +515,7 @@
         },
         "data": {
           "type": "infra_metric",
-          "name": "PluginTest TEST - Dynamo Db Update System Errors",
+          "name": "Dynamo Db Update System Errors",
           "enabled": false,
           "filter": {
             "and": [

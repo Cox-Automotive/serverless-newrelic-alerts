@@ -27,7 +27,7 @@ Object {
           ],
         },
         "integration_provider": undefined,
-        "name": "TestService TEST - Api Gateway 4 XX Errors",
+        "name": "Api Gateway 4 XX Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -67,7 +67,7 @@ Object {
           ],
         },
         "integration_provider": undefined,
-        "name": "TestService TEST - Api Gateway 5 XX Errors",
+        "name": "Api Gateway 5 XX Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -112,7 +112,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Batch Get System Errors",
+        "name": "Dynamo Db Batch Get System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -152,7 +152,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Batch Write System Errors",
+        "name": "Dynamo Db Batch Write System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -192,7 +192,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Delete System Errors",
+        "name": "Dynamo Db Delete System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -232,7 +232,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Get System Errors",
+        "name": "Dynamo Db Get System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -272,7 +272,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Put System Errors",
+        "name": "Dynamo Db Put System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -312,7 +312,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Query System Errors",
+        "name": "Dynamo Db Query System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -352,7 +352,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Scan System Errors",
+        "name": "Dynamo Db Scan System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -392,7 +392,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db Update System Errors",
+        "name": "Dynamo Db Update System Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -432,7 +432,7 @@ Object {
           ],
         },
         "integration_provider": "DynamoDbTable",
-        "name": "TestService TEST - Dynamo Db User Errors",
+        "name": "Dynamo Db User Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -477,7 +477,7 @@ Object {
           ],
         },
         "integration_provider": "LambdaFunction",
-        "name": "TestService TEST - Function Duration 1 Sec",
+        "name": "Function Duration 1 Sec",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -517,7 +517,7 @@ Object {
           ],
         },
         "integration_provider": "LambdaFunction",
-        "name": "TestService TEST - Function Errors",
+        "name": "Function Errors",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -557,7 +557,7 @@ Object {
           ],
         },
         "integration_provider": "LambdaFunction",
-        "name": "TestService TEST - Function Throttles",
+        "name": "Function Throttles",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -601,7 +601,7 @@ Object {
           ],
         },
         "integration_provider": "LambdaFunction",
-        "name": "TestService TEST - Test Function 2 Function Duration 1 Sec",
+        "name": "Test Function 2 Function Duration 1 Sec",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
@@ -675,7 +675,7 @@ Object {
           ],
         },
         "integration_provider": "SqsQueue",
-        "name": "TestService TEST - Sqs Dlq Visible Messages",
+        "name": "Sqs Dlq Visible Messages",
         "policy_id": Object {
           "Ref": "TestServiceTestNewRelicPolicy",
         },
