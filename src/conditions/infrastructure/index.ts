@@ -2,14 +2,14 @@ import { defaultAlertTypes } from '../../constants/alerts'
 import { ConditionType } from '../../constants/condition-type'
 import defaultAlerts from './default-alerts'
 
-const getInfrastructureCondition = (alert, serviceName, policyId) => {
+const getInfrastructureCondition = (alert, policyId) => {
   if (defaultAlertTypes.includes(alert.type)) {
     const defaultConfig = defaultAlerts[alert.type]
     return {
       policy_id: { Ref: policyId },
       data: {
         type: ConditionType.INFRA_METRIC,
-        name: `${serviceName} - ${alert.title}`,
+        name: alert.title,
         enabled: alert.enabled,
         filter: {
           and: [

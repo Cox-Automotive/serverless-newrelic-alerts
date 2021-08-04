@@ -82,7 +82,7 @@ class NewRelicPlugin implements Plugin {
         Type: 'Custom::NewRelicInfrastructureCondition',
         Properties: {
           ServiceToken: this.infrastructureConditionServiceToken,
-          ...getInfrastructureCondition(alert, this.serviceName, this.normalizedPolicyName)
+          ...getInfrastructureCondition(alert, this.normalizedPolicyName)
         }
       }
     }
@@ -274,6 +274,7 @@ class NewRelicPlugin implements Plugin {
     this.serviceName = `${getNormalizedName(this.serverless.service.getServiceName())} ${upperCase(
       this.awsProvider.getStage()
     )}`
+
     this.policyName = this.customPolicyName
       ? `${this.customPolicyName} ${upperCase(this.awsProvider.getStage())}`
       : this.serviceName
